@@ -1,0 +1,55 @@
+
+name: Go CI Pipeline
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.22' # Use the version of Go you are using in your project
+      id: go
+
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Test Backend
+      working-directory: ./backend
+      run: |
+        go test ./...
+
+    # - name: Build Backend
+    #   working-directory: ./backend
+    #   run: |
+    #     go build -v ./cmd/http
+
+    # Use this step if you have linting set up
+    - name: Lint
+      working-directory: ./backend
+      run: |
+        # Run your linter command here, for example:
+        go install golang.org/x/lint/golint@latest
+        golint ./...
+
+    # This step uses Docker to build your container. Uncomment it if you use Docker.
+    # - name: Build Docker image
+    #   working-directory: ./backend
+    #   run: |
+    #     docker build -t your-image-name:latest .
