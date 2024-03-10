@@ -8,4 +8,5 @@ func AddFoodRoutes(app *fiber.App, controller *FoodController) {
 		return c.SendString("Healthy!")
 	})
 	Food.Get("/create-schemas", controller.CreateSchemas)
+	Food.Get("/test-schema", controller.TestSchema)
 }

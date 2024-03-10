@@ -22,3 +22,11 @@ func (a *FoodController) CreateSchemas(c *fiber.Ctx) error {
 	}
 	return c.SendString("Schemas created")
 }
+
+func (a *FoodController) TestSchema(c *fiber.Ctx) error {
+	err := a.storage.TestSchema()
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+	return c.SendString("Food created")
+}

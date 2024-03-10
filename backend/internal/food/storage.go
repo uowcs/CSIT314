@@ -21,3 +21,13 @@ func (a *FoodStorage) CreateSchemas() error {
 	}
 	return nil
 }
+
+func (a *FoodStorage) TestSchema() error {
+	// Create the table
+	err := a.db.AutoMigrate(&models.Shop{})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+

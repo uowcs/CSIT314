@@ -8,3 +8,10 @@ type Meal struct {
 	Description string `json:"description"`
 	Price       int    `json:"price"`
 }
+
+type Shop struct {
+	gorm.Model
+	Name        string `json:"name"`
+	Description string `json:"description"`
+
+}
