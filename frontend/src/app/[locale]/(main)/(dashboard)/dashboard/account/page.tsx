@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
 import { LoadingButton } from "~/islands/loading-button";
 import { Input } from "~/islands/primitives/input";
 import { Label } from "~/islands/primitives/label";
@@ -18,7 +17,7 @@ import {
 } from "~/islands/navigation/page-header";
 import { Shell } from "~/islands/wrappers/shell-variants";
 import { getServerAuthSession } from "~/utils/auth/users";
-import { User } from "~/data/db/schema";
+import { users } from "~/data/db/schema";
 import { and, eq, not } from "drizzle-orm";
 import { db } from "~/data/db";
 import {
@@ -32,6 +31,8 @@ import {
 import { Button } from "~/islands/primitives/button";
 // import React, { useState } from "react";
 import { AddressCard } from "~/islands/account/AddressCard";
+import { u } from "node_modules/@upstash/redis/zmscore-07021e27";
+import { revalidatePath } from "next/cache";
 // import dynamic from "next/dynamic";
 
 // // Dynamically import the AddressCard with SSR disabled
@@ -45,8 +46,18 @@ export const metadata: Metadata = {
 	description: "Link your accounts",
 };
 
+export async function updateAddress(newAddress: string) {
+	"use server";
+	// Implement actual update logic here
+	const user = await getServerAuthSession();
+	const userId = user?.id;
+	await db
+		.update(users)
+		.set({ address: newAddress })
+		.where(userId ? eq(users.id, userId) : undefined);
+}
 export default async function ProfilesPage() {
-	const debug = process.env.NODE_ENV === "development";
+	const debug = process.env.NODE_ENV === "";
 	const user = await getServerAuthSession();
 	if (!user) redirect("/auth");
 	// async function updateStore(fd: FormData) {
@@ -75,6 +86,40 @@ export default async function ProfilesPage() {
 
 	// 	revalidatePath(`/dashboard/stores/${storeId}`);
 	// }
+	const currentAddress = async (): Promise<{
+		userId: string | undefined;
+		address: string;
+	}> => {
+		// Implement actual update logic here
+		const user = await getServerAuthSession();
+		const userId = user?.id;
+		console.log("userId", userId);
+		const address = await db.query.users.findFirst({
+			where: userId ? eq(users.id, userId) : undefined,
+			columns: {
+				address: true,
+			},
+		});
+		//return both userid and address
+		return {
+			userId: userId,
+			address: address?.address ?? "NO ADDRESS", // Provide a default value or handle the undefined case
+		};
+	};
+	const { userId, address } = await currentAddress();
+	async function updateAddress(fd: FormData) {
+		"use server";
+		// Implement actual update logic here
+		console.log("newaddress", fd.get("newAddress"));
+		const newAddress = fd.get("newAddress") as string;
+		const user = await getServerAuthSession();
+		const userId = user?.id;
+		await db
+			.update(users)
+			.set({ address: newAddress })
+			.where(userId ? eq(users.id, userId) : undefined);
+		revalidatePath("/dashboard/account");
+	}
 	return (
 		<Shell variant="sidebar">
 			<PageHeader
@@ -113,20 +158,37 @@ export default async function ProfilesPage() {
 					</h2>
 				</>
 			)}
-			<Card>
-				<CardHeader>
-					<CardTitle>Saved Addresses</CardTitle>
-					<CardDescription>Manage your saved addresses</CardDescription>
+
+			<Card
+				as="section"
+				id="update-address"
+				aria-labelledby="update-store-heading"
+			>
+				<CardHeader className="space-y-1">
+					<CardTitle className="text-2xl">Update your Address</CardTitle>
 				</CardHeader>
-				<CardContent className="p-0">
-					{/* Use the new AddressCard component */}
-					<AddressCard initialAddress="1234 Sunshine Rd" />
+				<CardContent>
+					<form action={updateAddress} className="grid w-full max-w-xl gap-5">
+						<fieldset className="grid gap-2.5">
+							<Input
+								id="update-store-name"
+								aria-describedby="update-store-name-description"
+								name="newAddress"
+								required
+								minLength={3}
+								maxLength={50}
+								placeholder="Type store name here."
+								defaultValue={address}
+							/>
+						</fieldset>
+						<div className="flex flex-col gap-2 xs:flex-row">
+							<LoadingButton>
+								Update store
+								<span className="sr-only">Update store</span>
+							</LoadingButton>
+						</div>
+					</form>
 				</CardContent>
-				<CardFooter className="p-0">
-					<Button size="sm" variant="outline">
-						New Address
-					</Button>
-				</CardFooter>
 			</Card>
 			{debug && (
 				<>

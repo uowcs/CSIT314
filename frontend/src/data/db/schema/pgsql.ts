@@ -36,7 +36,8 @@ export const pgTable = pgTableCreator((name) => `acme_${name}`);
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
-  addresses: json("addresses").$type<string[] | null>().default(null),
+  // addresses: json("addresses").$type<string[] | null>().default(null),
+  address: text("address"),
   email: text("email"),
   emailClerk: text("emailClerk"),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
