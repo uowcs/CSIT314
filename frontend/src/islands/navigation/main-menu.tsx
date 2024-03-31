@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { useSelectedLayoutSegment } from "next/navigation";
 import { type MainMenuItem } from "~/types";
 import { cn } from "~/utils";
 import { ActivitySquare } from "lucide-react";
-
+import { useSelectedLayoutSegment } from "next/navigation";
 import { Button } from "~/islands/primitives/ui/button";
 import {
 	DropdownMenu,
@@ -30,13 +29,12 @@ import { Link } from "~/navigation";
 
 interface MainMenuProps {
 	items?: MainMenuItem[];
+	address?: string;
 }
-
-export function MainMenu({ items }: MainMenuProps) {
-	const segment = useSelectedLayoutSegment();
+export function MainMenu({ items, address }: MainMenuProps) {
+	const segment = useSelectedLayoutSegment(); // So is `useSelectedLayoutSegment`
 	const v2_main_menu_experimental = false;
 	const [position, setPosition] = React.useState("bottom");
-
 	return (
 		<div className="hidden gap-6 lg:flex">
 			<Link
@@ -52,15 +50,32 @@ export function MainMenu({ items }: MainMenuProps) {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="ghost">address</Button>
+					<Button variant="ghost">{address}</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-56">
-					<DropdownMenuLabel>Panel Position</DropdownMenuLabel>
-					<DropdownMenuSeparator />
+				<DropdownMenuContent className="w-56 flex-col items-center">
 					<DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-						<DropdownMenuRadioItem value="top">Address 1</DropdownMenuRadioItem>
-						<DropdownMenuRadioItem value="bottom">Address 2</DropdownMenuRadioItem>
-						<DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+						<DropdownMenuRadioItem value="top" defaultChecked>
+							{address}
+						</DropdownMenuRadioItem>
+						{/* <DropdownMenuRadioItem value="right"> */}
+						<div className="flex w-full justify-center">
+							<Link href="/dashboard/account#update-address" passHref>
+								<Button variant="secondary">change address</Button>
+							</Link>
+							{/* <Button
+								variant="secondary"
+								onClick={
+									() => {
+										// Redirect to account page and scroll to the update address section
+										router.push("/account#update-address");
+									}
+									//redurect to account page to the update address section
+								}
+							>
+								change address
+							</Button> */}
+						</div>
+						{/* </DropdownMenuRadioItem> */}
 					</DropdownMenuRadioGroup>
 				</DropdownMenuContent>
 			</DropdownMenu>
