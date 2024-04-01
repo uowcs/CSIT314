@@ -9,4 +9,5 @@ func AddFoodRoutes(app *fiber.App, controller *FoodController) {
 	})
 	Food.Get("/create-schemas", controller.CreateSchemas)
 	Food.Get("/test-schema", controller.TestSchema)
+	Food.Get("/distance", controller.GetDistance)
 }

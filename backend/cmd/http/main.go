@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/uowcs/CSIT214/config"
-	_ "github.com/uowcs/CSIT214/docs"
-	food "github.com/uowcs/CSIT214/internal/food"
-	"github.com/uowcs/CSIT214/internal/storage"
-	"github.com/uowcs/CSIT214/pkg/shutdown"
+	"github.com/uowcs/CSIT314/config"
+	_ "github.com/uowcs/CSIT314/docs"
+	food "github.com/uowcs/CSIT314/internal/food"
+	"github.com/uowcs/CSIT314/internal/storage"
+	"github.com/uowcs/CSIT314/pkg/shutdown"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

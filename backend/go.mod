@@ -1,4 +1,4 @@
-module github.com/uowcs/CSIT214
+module github.com/uowcs/CSIT314
 
 go 1.19
 
