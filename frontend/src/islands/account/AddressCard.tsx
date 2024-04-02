@@ -32,7 +32,7 @@ export const AddressCard = ({ initialAddress, userID }: AddressCardProps) => {
 			console.log("response", response);
 
 			if (response.ok) {
-				console.log("Address updated successfully");
+				// console.log("Address updated successfully");
 				// Optionally, update local state or trigger a re-fetch/reload to show the updated address
 			} else {
 				throw new Error("Failed to update the address");

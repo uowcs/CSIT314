@@ -9,8 +9,8 @@ export default async function handler(req, res) {
     try {
       // Extract address and possibly user ID from the request body
       const { userId, newAddress } = req.body;
-        console.log("userId", userId);
-        console.log("newAddress", newAddress);
+        // console.log("userId", userId);
+        // console.log("newAddress", newAddress);
       // Update the address in the database
       // Ensure you have logic here to only allow updates for the user making the request
 		await db

@@ -51,7 +51,7 @@ export async function SiteHeader({
 		// Implement actual update logic here
 		const user = await getServerAuthSession();
 		const userId = user?.id;
-		console.log("userId", userId);
+		// console.log("userId", userId);
 		const address = await db.query.users.findFirst({
 			where: userId ? eq(users.id, userId) : undefined,
 			columns: {
@@ -64,7 +64,7 @@ export async function SiteHeader({
 		};
 	};
 	const { address } = await getAddress();
-	console.log("address", address);
+	// console.log("address", address);
 	// [1/2] Calling `(use|get)Translations` in Server Component (get in async) ...
 	// https://next-intl-docs.vercel.app/docs/environments/server-client-components
 	const t = await getTranslations();

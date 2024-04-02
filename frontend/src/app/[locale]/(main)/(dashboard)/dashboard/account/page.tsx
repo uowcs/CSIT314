@@ -45,17 +45,6 @@ export const metadata: Metadata = {
 	title: "Link Accounts",
 	description: "Link your accounts",
 };
-
-export async function updateAddress(newAddress: string) {
-	"use server";
-	// Implement actual update logic here
-	const user = await getServerAuthSession();
-	const userId = user?.id;
-	await db
-		.update(users)
-		.set({ address: newAddress })
-		.where(userId ? eq(users.id, userId) : undefined);
-}
 export default async function ProfilesPage() {
 	const debug = process.env.NODE_ENV === "";
 	const user = await getServerAuthSession();
@@ -93,7 +82,7 @@ export default async function ProfilesPage() {
 		// Implement actual update logic here
 		const user = await getServerAuthSession();
 		const userId = user?.id;
-		console.log("userId", userId);
+		// console.log("userId", userId);
 		const address = await db.query.users.findFirst({
 			where: userId ? eq(users.id, userId) : undefined,
 			columns: {
