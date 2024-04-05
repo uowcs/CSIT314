@@ -1,5 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { db } from "~/data/db";
 
 import { products } from "~/data/db/schema";
 import { fullURL } from "~/data/meta/builder";
@@ -15,6 +16,7 @@ import { Shell } from "~/islands/wrappers/shell-variants";
 import { getProductsAction } from "~/server/actions/product";
 import { getStoresAction } from "~/server/actions/store";
 import { getServerAuthSession } from "~/utils/auth/users";
+import { stores } from "~/data/db/schema/pgsql";
 
 export const metadata: Metadata = {
 	metadataBase: fullURL(),
@@ -43,6 +45,25 @@ export default async function ProductsPage({
 	} = productsSearchParamsSchema.parse(searchParams);
 
 	const t = await getTranslations();
+	const getStoreName = async () => {
+		// "use server";
+		if (store_ids != null) {
+			try {
+				const store = await db.stores.findfirst({
+					where: {
+						id: store_ids,
+					},
+				});
+				if (store) {
+					return store.name;
+				}
+			} catch (error) {
+				console.error("failed to fetch store:", error);
+			}
+		}
+	};
+	const storename = await getStoreName();
+	console.log(storename);
 
 	// Products transaction
 	const pageAsNumber = Number(page);
@@ -92,9 +113,9 @@ export default async function ProductsPage({
 				<PageHeaderHeading size="sm">
 					{t("store.product.products")}
 				</PageHeaderHeading>
-				<PageHeaderDescription size="sm">
+				{/* <PageHeaderDescription size="sm">
 					{t("store.product.buyProductsFromOurStores")}
-				</PageHeaderDescription>
+				</PageHeaderDescription> */}
 			</PageHeader>
 			<Products
 				products={productsTransaction.items}
