@@ -2,11 +2,28 @@ import { db } from "~/data/db";
 import { eq } from "drizzle-orm";
 import { stores, users } from "~/data/db/schema";
 import fetch from "node-fetch"; // ensure you have node-fetch installed
-
-export async function GET(req, res) {
+import { type NextRequest, NextResponse } from "next/server";
+import type { NextApiRequest } from "next";
+const cache = {};
+export async function GET(req: NextRequest | Request, res: NextResponse) {
 	// Parse query parameters
-	const { userId, storeId } = req.query;
-
+	// const { userId, storeId } = req.body;
+	// console.log("userId", userId);
+	// console.log("storeId", storeId);
+	if (!req.url) {
+		return NextResponse.error(); // Remove the argument from the function call
+	}
+	const url = new URL(req.url);
+	// Accessing searchParams from the parsed URL
+	const searchParams = url.searchParams;
+	// Now you can get individual query parameters by name
+	const userId = searchParams.get("userId");
+	const storeId = searchParams.get("storeId");
+	const cacheKey = `distance:${userId}:${storeId}`;
+	if (cache[cacheKey]) {
+		console.log("Returning cached response");
+		return NextResponse.json(cache[cacheKey]);
+	}
 	try {
 		// Fetch user and store details
 		const user = await db.query.users.findFirst({
@@ -15,14 +32,19 @@ export async function GET(req, res) {
 		});
 
 		const store = await db.query.stores.findFirst({
-			where: eq(stores.id, storeId),
+			where: eq(stores.id, Number(storeId)), // Convert storeId to number
 			select: { address: true }, // select only the address
 		});
 
 		if (!user || !store) {
-			return res.status(404).json({ error: "User or store not found" });
+			return NextResponse.error({
+				status: 404,
+				body: "User or store not found",
+			});
 		}
 
+		console.log("user address", user.address);
+		console.log("store address", store.address);
 		// Construct the request URL for Google Maps Distance Matrix API
 		const googleMapsURL = new URL(
 			"https://maps.googleapis.com/maps/api/distancematrix/json",
@@ -39,20 +61,20 @@ export async function GET(req, res) {
 		// Check for any errors in the response
 		if (data.status !== "OK") {
 			console.error("Error from Google Maps API:", data);
-			return res
-				.status(500)
-				.json({ error: "Failed to get distance from Google Maps API" });
+			return NextResponse.error();
 		}
 
 		// Assuming we have one origin and one destination, take the first element
 		const result = data.rows[0].elements[0];
 		const distance = result.distance.value; // Distance in meters
 		const duration = result.duration.text; // Human-readable duration
-
-		// Return the distance and duration in the response
-		res.status(200).json({ distance, duration });
+		const distanceResponse = { distance, duration };
+		cache[cacheKey] = distanceResponse;
+		// // Return the distance and duration in the response
+		// res.status(200).json({ distance, duration });
+		return NextResponse.json(distanceResponse);
 	} catch (error) {
 		console.error("Failed to calculate distance:", error);
-		res.status(500).json({ error: "Internal server error" });
+		NextResponse.error();
 	}
 }
