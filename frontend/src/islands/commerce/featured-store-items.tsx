@@ -58,31 +58,18 @@ export async function FeaturedStoreItems() {
   const guestEmail = getCookie("GUEST_EMAIL")?.toString() || null;
 
   return (
+    <>
     <section
       id="featured-items"
       aria-labelledby="featured-items-heading"
-      className="mt-10 grid grid-cols-1 items-stretch gap-6 text-card-foreground/80 sm:grid-cols-2"
+      className=""
     >
-      <div className="rounded-lg border-2 border-dotted bg-card px-6 py-16 shadow-sm">
-        <div className="flex items-baseline">
-          <h3 className="mb-10 flex-1 font-heading text-xl md:flex md:text-2xl lg:text-3xl">
-            <span className="mr-1 hidden md:block">Featured</span> Products
-          </h3>
-          <Link aria-label="Products" href="/products">
-            <div
-              className={cn(
-                buttonVariants({
-                  size: "sm",
-                  variant: "link",
-                }),
-                "text-muted-foreground",
-              )}
-            >
-              <span className="hidden sm:block">View all</span>
-            </div>
-          </Link>
-        </div>
-
+                <h2 className="mb-10 flex-1 font-heading text-xl md:flex md:text-2xl lg:text-3xl">
+            <span className="mr-1 hidden md:block">Suggestion for</span> you!
+          </h2>
+      <div className="container">
+      <div className="flex flex-wrap">
+      <div className="w-full center px-4">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {guestEmail || session ?
             <>
@@ -108,10 +95,12 @@ export async function FeaturedStoreItems() {
               ))}
             </>
           }
+          </div>
+        </div>
         </div>
       </div>
 
-      <div className="rounded-lg border-2 border-dotted bg-card px-6 py-16 shadow-sm">
+      <div className="rounded-lg  bg-card py-16 shadow-sm">
         <div className="flex items-baseline">
           <h2 className="mb-10 flex-1 font-heading text-xl md:flex md:text-2xl lg:text-3xl">
             <span className="mr-1 hidden md:block">Featured</span> Stores
@@ -130,6 +119,9 @@ export async function FeaturedStoreItems() {
             </div>
           </Link>
         </div>
+        <div className="container">
+      <div className="flex flex-wrap">
+      <div className="w-full center px-4">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {someStores.map((store: Store) => (
             <StoreCard
@@ -139,7 +131,11 @@ export async function FeaturedStoreItems() {
             />
           ))}
         </div>
+        </div>
+        </div>
+        </div>
       </div>
     </section>
+    </>
   );
 }
