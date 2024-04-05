@@ -1,8 +1,9 @@
 import { get } from "lodash";
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import {eq} from "drizzle-orm";
-import { products, stores, type Product } from "~/data/db/schema";
+import { db } from "~/data/db";
+
+import { products } from "~/data/db/schema";
 import { fullURL } from "~/data/meta/builder";
 import { productsSearchParamsSchema } from "~/data/validations/params";
 import { env } from "~/env.mjs";
@@ -16,8 +17,7 @@ import { Shell } from "~/islands/wrappers/shell-variants";
 import { getProductsAction } from "~/server/actions/product";
 import { getStoresAction } from "~/server/actions/store";
 import { getServerAuthSession } from "~/utils/auth/users";
-import { db } from "~/data/db";
-import { notFound } from "next/navigation";
+import { stores } from "~/data/db/schema/pgsql";
 
 export const metadata: Metadata = {
 	metadataBase: fullURL(),
@@ -31,16 +31,6 @@ interface ProductsPageProperties {
 	};
 }
 
-async function getStoreId(storeId: string) {
-	"use server";
-	if (!storeId) return null;
-	const store = await db.query.stores.findFirst({
-		columns: { id: true, name: true },
-		where: eq(stores.id, Number(storeId)),
-		
-	});
-	return store;
-}
 export default async function ProductsPage({
 	searchParams,
 }: ProductsPageProperties) {
@@ -56,7 +46,25 @@ export default async function ProductsPage({
 	} = productsSearchParamsSchema.parse(searchParams);
 
 	const t = await getTranslations();
-	
+	const getStoreName = async () => {
+		// "use server";
+		if (store_ids != null) {
+			try {
+				const store = await db.stores.findfirst({
+					where: {
+						id: store_ids,
+					},
+				});
+				if (store) {
+					return store.name;
+				}
+			} catch (error) {
+				console.error("failed to fetch store:", error);
+			}
+		}
+	};
+	const storename = await getStoreName();
+	console.log(storename);
 
 	// Products transaction
 	const pageAsNumber = Number(page);
@@ -116,9 +124,9 @@ export default async function ProductsPage({
 				<PageHeaderHeading size="sm">
 					{isCustomStore ? store.name : t("store.product.products")}
 				</PageHeaderHeading>
-				<PageHeaderDescription size="sm">
+				{/* <PageHeaderDescription size="sm">
 					{t("store.product.buyProductsFromOurStores")}
-				</PageHeaderDescription>
+				</PageHeaderDescription> */}
 			</PageHeader>
 			<Products
 				products={productsTransaction.items}

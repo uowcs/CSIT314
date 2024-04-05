@@ -46,7 +46,21 @@ interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	userID: string;
 }
 
-export function ProductCard({
+async function getDistanceAndDuration(userID: string, storeId: number) {
+	// "use server";
+	const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // set this in your .env file
+
+	const response = await fetch(
+		`${baseUrl}/api/distance?userId=${userID}&storeId=${storeId}`,
+	);
+	const data = await response.json();
+	// console.log("data", data);
+	const distance = data.distance;
+	// console.log("distance", distance);
+	const duration = data.duration;
+	return { distance, duration };
+}
+export async function ProductCard({
 	tAddToCart = "Add to cart",
 	isAddedToCart = false,
 	variant = "default",
@@ -58,7 +72,8 @@ export function ProductCard({
 	...props
 }: ProductCardProps) {
 	const [isPending, startTransition] = React.useTransition();
-	// console.log("userID", userID);
+	console.log("userID", userID);
+	console.log("storeId", storeId);
 	// const user = getServerAuthSession();
 	// const userID = user?.id;
 	// //create a new distance object of typpe ProductDistance that calles the async function getDistance
@@ -75,7 +90,21 @@ export function ProductCard({
 
 	// console.log("(x) storeId:", storeId, typeof storeId);
 	// console.log("(x) product.storeId:", product.storeId, typeof product.storeId);
-
+	const isAuth = userID != undefined;
+	let finaldistance = "";
+	let duration = "";
+	if (isAuth) {
+		const distanceAndDuration = await getDistanceAndDuration(userID, storeId);
+		const distance = distanceAndDuration.distance;
+		if (distance >= 1000) {
+			finaldistance = `${(distance / 1000).toFixed(2)} km`;
+		} else {
+			finaldistance = `${distance} m`;
+		}
+		// console.log("distance", distance);
+		duration = distanceAndDuration.duration;
+		// console.log("duration", duration);
+	}
 	return (
 		<Card className={cn("h-full overflow-hidden", className)} {...props}>
 			<Link
@@ -117,9 +146,9 @@ export function ProductCard({
 			>
 				<CardContent className="grid gap-2.5 p-4">
 					<CardTitle className="line-clamp-1">{product.name}</CardTitle>
-					<CardDescription className="line-clamp-10">
+					<CardDescription className="line-clamp-10 justify-between">
 						<div>{formatPrice(product.price)}</div>
-						<div style={{ display: "flex", alignItems: "center" }}>
+						<div className="flex items-center">
 							{/* {product.rating} */}
 							4.5
 							<svg
@@ -139,7 +168,9 @@ export function ProductCard({
 								/>
 							</svg>
 						</div>
-						{/* {product.distance} */}
+						<div>
+							{isAuth !== false ? `${finaldistance}, ${duration}` : null}
+						</div>
 					</CardDescription>
 				</CardContent>
 			</Link>
