@@ -1,7 +1,8 @@
+import { get } from "lodash";
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-
-import { products } from "~/data/db/schema";
+import {eq} from "drizzle-orm";
+import { products, stores, type Product } from "~/data/db/schema";
 import { fullURL } from "~/data/meta/builder";
 import { productsSearchParamsSchema } from "~/data/validations/params";
 import { env } from "~/env.mjs";
@@ -15,6 +16,8 @@ import { Shell } from "~/islands/wrappers/shell-variants";
 import { getProductsAction } from "~/server/actions/product";
 import { getStoresAction } from "~/server/actions/store";
 import { getServerAuthSession } from "~/utils/auth/users";
+import { db } from "~/data/db";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
 	metadataBase: fullURL(),
@@ -28,6 +31,16 @@ interface ProductsPageProperties {
 	};
 }
 
+async function getStoreId(storeId: string) {
+	"use server";
+	if (!storeId) return null;
+	const store = await db.query.stores.findFirst({
+		columns: { id: true, name: true },
+		where: eq(stores.id, Number(storeId)),
+		
+	});
+	return store;
+}
 export default async function ProductsPage({
 	searchParams,
 }: ProductsPageProperties) {
@@ -43,6 +56,7 @@ export default async function ProductsPage({
 	} = productsSearchParamsSchema.parse(searchParams);
 
 	const t = await getTranslations();
+	
 
 	// Products transaction
 	const pageAsNumber = Number(page);
@@ -86,11 +100,21 @@ export default async function ProductsPage({
 
 	const session = await getServerAuthSession();
 
+	let isCustomStore = false;
+	let store = null;
+	if (store_ids != undefined) {
+		isCustomStore = true;
+		store = await getStoreId(store_ids);
+		if (!store) {
+			return notFound();
+		}
+	}
+
 	return (
 		<Shell>
 			<PageHeader>
 				<PageHeaderHeading size="sm">
-					{t("store.product.products")}
+					{isCustomStore ? store.name : t("store.product.products")}
 				</PageHeaderHeading>
 				<PageHeaderDescription size="sm">
 					{t("store.product.buyProductsFromOurStores")}
