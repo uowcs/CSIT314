@@ -20,6 +20,9 @@ import {
 } from "~/islands/primitives/card";
 import { Link } from "~/navigation";
 import { addToCartAction } from "~/server/actions/cart";
+import { useEffect, useState } from "react";
+import { CardSkeleton } from "./skeleton-card";
+import { Skeleton } from "~/islands/primitives/skeleton";
 // import { getServerAuthSession } from "~/utils/auth/users";
 interface ProductDistance {
 	distance: number;
@@ -46,21 +49,21 @@ interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	userID: string;
 }
 
-async function getDistanceAndDuration(userID: string, storeId: number) {
-	// "use server";
-	const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // set this in your .env file
+// async function getDistanceAndDuration(userID: string, storeId: number) {
+// 	// "use server";
+// 	const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // set this in your .env file
 
-	const response = await fetch(
-		`${baseUrl}/api/distance?userId=${userID}&storeId=${storeId}`,
-	);
-	const data = await response.json();
-	// console.log("data", data);
-	const distance = data.distance;
-	// console.log("distance", distance);
-	const duration = data.duration;
-	return { distance, duration };
-}
-export async function ProductCard({
+// 	const response = await fetch(
+// 		`${baseUrl}/api/distance?userId=${userID}&storeId=${storeId}`,
+// 	);
+// 	const data = await response.json();
+// 	// console.log("data", data);
+// 	const distance = data.distance;
+// 	// console.log("distance", distance);
+// 	const duration = data.duration;
+// 	return { distance, duration };
+// }
+export function ProductCard({
 	tAddToCart = "Add to cart",
 	isAddedToCart = false,
 	variant = "default",
@@ -72,8 +75,45 @@ export async function ProductCard({
 	...props
 }: ProductCardProps) {
 	const [isPending, startTransition] = React.useTransition();
-	console.log("userID", userID);
-	console.log("storeId", storeId);
+	// console.log("userID", userID);
+	// console.log("storeId", storeId);
+	const [distanceInfo, setDistanceInfo] = useState({
+		finalDistance: "",
+		duration: "",
+	});
+	const [isLoading, setIsLoading] = useState(true); // Add a loading state
+
+	useEffect(() => {
+		const fetchDistanceAndDuration = async () => {
+			if (userID && storeId) {
+				try {
+					const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // Make sure this is accessible here
+					const response = await fetch(
+						`${baseUrl}/api/distance?userId=${userID}&storeId=${storeId}`,
+					);
+					const data = await response.json();
+					const distance = data.distance;
+					const finalDistance =
+						distance >= 1000
+							? `${(distance / 1000).toFixed(2)} km`
+							: `${distance} m`;
+					const duration = data.duration;
+					console.log("distance", distance);
+					console.log("duration", duration);
+					setDistanceInfo({ finalDistance, duration });
+					setIsLoading(false); // Set loading to false after fetching data
+				} catch (error) {
+					console.error("Failed to fetch distance and duration", error);
+					setIsLoading(false); // Set loading to false after fetching data
+				}
+			} else {
+				setIsLoading(false); // Set loading to false after fetching data
+			}
+		};
+
+		fetchDistanceAndDuration();
+	}, [userID, storeId]);
+
 	// const user = getServerAuthSession();
 	// const userID = user?.id;
 	// //create a new distance object of typpe ProductDistance that calles the async function getDistance
@@ -91,19 +131,54 @@ export async function ProductCard({
 	// console.log("(x) storeId:", storeId, typeof storeId);
 	// console.log("(x) product.storeId:", product.storeId, typeof product.storeId);
 	const isAuth = userID != undefined;
-	let finaldistance = "";
-	let duration = "";
-	if (isAuth) {
-		const distanceAndDuration = await getDistanceAndDuration(userID, storeId);
-		const distance = distanceAndDuration.distance;
-		if (distance >= 1000) {
-			finaldistance = `${(distance / 1000).toFixed(2)} km`;
-		} else {
-			finaldistance = `${distance} m`;
-		}
-		// console.log("distance", distance);
-		duration = distanceAndDuration.duration;
-		// console.log("duration", duration);
+	// let finaldistance = "";
+	// if (isAuth) {
+	// 	if (Number(distanceInfo.finalDistance) >= 1000) {
+	// 		finaldistance = `${(Number(distanceInfo.finalDistance) / 1000).toFixed(
+	// 			2,
+	// 		)} km`;
+	// 	} else {
+	// 		finaldistance = `${(Number(distanceInfo.finalDistance))} m`;
+	// 	}
+	// 	// console.log("distance", distance);
+	// 	// console.log("duration", duration);
+	// }
+	if (isLoading) {
+		return (
+			<div className={`${className} flex flex-col space-y-3 overflow-hidden`}>
+				{/* Mimicking the image area with a specific aspect ratio */}
+				<Skeleton
+					className="w-full rounded-xl"
+					style={{ paddingTop: "66.66%" }}
+				/>
+
+				{/* Mimicking the card content area */}
+				<div className="p-4 space-y-2">
+					{/* Mimicking the product title */}
+					<Skeleton className="w-full rounded h-6" />
+
+					{/* Mimicking the product price and rating */}
+					<div className="flex justify-between items-center space-x-2">
+						<Skeleton className="w-1/2 rounded h-4" /> {/* Price */}
+						<div className="w-1/4 flex items-center space-x-2">
+							<Skeleton className="h-4 w-4 rounded-full" /> {/* Rating icon */}
+							<Skeleton className="h-4 w-16 rounded" /> {/* Rating value */}
+						</div>
+					</div>
+
+					{/* Mimicking additional product details if present */}
+					<div className="space-y-1">
+						<Skeleton className="w-5/6 rounded h-4" />
+						<Skeleton className="w-4/6 rounded h-4" />
+					</div>
+				</div>
+
+				{/* Mimicking the action button */}
+				<div className="px-4 pb-4">
+					<Skeleton className="w-full rounded-md h-10" />
+				</div>
+			</div>
+		);
 	}
 	return (
 		<Card className={cn("h-full overflow-hidden", className)} {...props}>
@@ -149,8 +224,8 @@ export async function ProductCard({
 					<CardDescription className="line-clamp-10 justify-between">
 						<div>{formatPrice(product.price)}</div>
 						<div className="flex items-center">
-							{/* {product.rating} */}
-							4.5
+							{product.rating}
+							{/* 4.5 */}
 							<svg
 								style={{ marginLeft: "4px" }} // Add some spacing to the left of the star icon
 								width="16"
@@ -169,7 +244,10 @@ export async function ProductCard({
 							</svg>
 						</div>
 						<div>
-							{isAuth !== false ? `${finaldistance}, ${duration}` : null}
+							{isAuth !== false
+								? `${distanceInfo.finalDistance}, ${distanceInfo.duration}`
+								: null}
+							{/* {distanceInfo.finalDistance && distanceInfo.duration} */}
 						</div>
 					</CardDescription>
 				</CardContent>
