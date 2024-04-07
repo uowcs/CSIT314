@@ -78,7 +78,7 @@ export async function FeaturedStoreItems() {
                 "text-muted-foreground",
               )}
             >
-              <span className="hidden sm:block text-black">View all</span>
+              <span className="hidden sm:block ">View all</span>
             </div>
           </Link>
         </div>
@@ -126,7 +126,7 @@ export async function FeaturedStoreItems() {
                 "text-muted-foreground",
               )}
             >
-              <span className="hidden sm:block text-black">View all</span>
+              <span className="hidden sm:block ">View all</span>
             </div>
           </Link>
         </div>

@@ -63,12 +63,12 @@ export default function HomePage() {
       <section aria-labelledby="hero-heading" className="w-full flex mb-2 mt-1 items-center justify-center text-center" id="hero">
 
 
-      <Carousel opts={{ align: "start" }} className="mt-4 w-full relative">
-  <CarouselContent className="flex gap-x-0">
+      <Carousel opts={{ align: "start" }} className="mt-4 lg:w-3/4 relative">
+  <CarouselContent className="flex lg:ml-10 lg:mr-10 gap-x-0">
     {productCategories.map((category, i) => (
-      <CarouselItem key={i} className="flex-none sm:w-1/4 md:w-1/12 lg:w-1/6">
+      <CarouselItem key={i} className="flex-none sm:w-1/6 md:w-1/6 lg:w-1/6">
         <div className="p-1">
-          <Badge className="w-max-sm px-3 border border-gray bg-white text-black">
+          <Badge className="w-max-sm px-3 border py-1">
             <Avatar className="mx-2">
               <AvatarImage src={category.image} alt="@shadcn" />
               <AvatarFallback>NOM</AvatarFallback>
