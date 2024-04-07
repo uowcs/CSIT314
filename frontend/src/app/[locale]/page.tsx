@@ -40,17 +40,11 @@ export async function generateMetadata({ params }) {
 		title: `${t("metadata.title.home")} – ${siteConfig.name}`,
 	};
 	return metadata;
-	const t = await getTranslations();
-	const metadata: Metadata = {
-		title: `${t("metadata.title.home")} – ${siteConfig.name}`,
-	};
-	return metadata;
 }
 
 export default function HomePage() {
 	// useTranslations works both on the server and client
 	// we only need the getTranslations on async components
-	const t = useTranslations();
 	// useTranslations works both on the server and client
 	// we only need the getTranslations on async components
 	const t = useTranslations();
