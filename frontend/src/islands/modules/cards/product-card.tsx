@@ -98,8 +98,8 @@ export function ProductCard({
 							? `${(distance / 1000).toFixed(2)} km`
 							: `${distance} m`;
 					const duration = data.duration;
-					console.log("distance", distance);
-					console.log("duration", duration);
+					// console.log("distance", distance);
+					// console.log("duration", duration);
 					setDistanceInfo({ finalDistance, duration });
 					setIsLoading(false); // Set loading to false after fetching data
 				} catch (error) {
