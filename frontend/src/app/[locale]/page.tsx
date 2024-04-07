@@ -67,14 +67,16 @@ export default function HomePage() {
   <CarouselContent className="flex lg:ml-10 lg:mr-10 gap-x-0">
     {productCategories.map((category, i) => (
       <CarouselItem key={i} className="flex-none sm:w-1/6 md:w-1/6 lg:w-1/6">
-        <div className="p-1">
-          <Badge className="w-max-sm px-3 border py-1">
+        <div className="p-1 pt-4">
+          <Link className="bg-transparent border-none hover:text-current hover:bg-transparent focus:text-current focus:bg-transparent focus:outline-none focus:border-none " href={`/categories/${category.title}`}>
+          <Badge  className="w-max-sm px-3 border py-1">
             <Avatar className="mx-2">
               <AvatarImage src={category.image} alt="@shadcn" />
               <AvatarFallback>NOM</AvatarFallback>
             </Avatar>
             {category.title}
           </Badge>
+          </Link>
         </div>
       </CarouselItem>
     ))}
@@ -145,43 +147,11 @@ export default function HomePage() {
 
         <FeaturedStoreItems />
 
-        <section
-          aria-labelledby="categories-heading"
-          className="py-1"
-          id="categories"
-        >
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-            {productCategories.map((category) => (
-              <NavLink
-                aria-label={`${t("demo.aria-label-goto")} ${category.title}`}
-                href={`/categories/${category.title}`}
-                key={category.title}
-              >
-                <h3 className="flex h-12 items-center justify-center rounded-lg bg-zinc-100 font-medium capitalize text-zinc-900 transition-colors dark:bg-zinc-900 dark:text-zinc-200">
-                  {category.title}
-                </h3>
-              </NavLink>
-            ))}
-          </div>
-        </section>
-
         {env.DEV_DEMO_NOTES === "true" && <Features />}
 
         <FrequentlyAskedQuestions />
 
-        <section
-          aria-labelledby="create-a-store-banner-heading"
-          className="mb-14 mt-10 grid place-items-center gap-6 bg-card px-6 text-center text-card-foreground"
-          id="create-a-store-banner"
-        >
-          <div className="text-xl font-medium sm:text-2xl">
-            {t("landing.footer-cta")}
-          </div>
-          <Link href="/dashboard/stores" size="lg" variant="secondary">
-            {t("landing.get-started-btn")}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </section>
+
       </GeneralShell>
       <SiteFooter />
     </>
