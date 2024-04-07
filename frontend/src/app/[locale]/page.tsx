@@ -27,19 +27,12 @@ import { Badge } from "~/islands/primitives/ui/badge"
 import { ProtmotionBanner } from "~/islands/commerce/promotion-banner"
 
 import {
-
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "~/islands/primitives/ui/carousel"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/islands/primitives/ui/avatar"
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "~/islands/primitives/ui/carousel";
 
 export async function generateMetadata({ params }) {
 	const t = await getTranslations();
@@ -64,38 +57,6 @@ export default function HomePage() {
 					id="hero"
 				>
 					{/* <section
-  return (
-    <>
-      <SiteHeader />
-      <GeneralShell>
-      <section aria-labelledby="hero-heading" className="w-full flex mb-2 mt-1 items-center justify-center text-center" id="hero">
-
-
-      <Carousel opts={{ align: "start" }} className="mt-4 lg:w-3/4 relative">
-  <CarouselContent className="flex lg:ml-10 lg:mr-10 gap-x-0">
-    {productCategories.map((category, i) => (
-      <CarouselItem key={i} className="flex-none sm:w-1/6 md:w-1/6 lg:w-1/6">
-        <div className="p-1 pt-4">
-          <Link className="bg-transparent border-none hover:text-current hover:bg-transparent focus:text-current focus:bg-transparent focus:outline-none focus:border-none " href={`/categories/${category.title}`}>
-          <Badge  className="w-max-sm px-3 border py-1">
-            <Avatar className="mx-2">
-              <AvatarImage src={category.image} alt="@shadcn" />
-              <AvatarFallback>NOM</AvatarFallback>
-            </Avatar>
-            {category.title}
-          </Badge>
-          </Link>
-        </div>
-      </CarouselItem>
-    ))}
-  </CarouselContent>
-  <CarouselPrevious className="absolute left-0 z-10" />
-  <CarouselNext className="absolute right-0 z-10" />
-</Carousel>
-
-
-
-        {/* <section
           aria-labelledby="hero-heading"
           className="mx-auto mb-2 mt-1 flex w-full flex-col items-center justify-center gap-4 pt-10 text-center"
           id="hero"
@@ -115,7 +76,32 @@ export default function HomePage() {
 
 					{/* Home Page Food Categories*/}
 
-{/*
+					<Carousel
+						opts={{
+							align: "start",
+						}}
+						className="w-10/12	h-auto"
+					>
+						<CarouselContent>
+							{Array.from({ length: 10 }).map((_, index) => (
+								<CarouselItem key={index} className="md:basis-1/7 lg:basis-1/5">
+									<div className="p-1">
+										<Card>
+											<CardContent className="flex aspect-square items-center h-12 justify-center p-6">
+												<span className="text-3xl font-semibold">
+													{index + 1}
+												</span>
+											</CardContent>
+										</Card>
+									</div>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselPrevious />
+						<CarouselNext />
+					</Carousel>
+
+					{/*
           <div className="mt-3 flex flex-wrap items-center justify-center gap-4">
             {env.DEV_DEMO_NOTES === "true" ? (
               <Link
@@ -150,10 +136,6 @@ export default function HomePage() {
           </div> */}
 				</section>
 
-        </section>
-
-        <ProtmotionBanner/>
-
 				<FeaturedStoreItems />
 
 				<section
@@ -175,7 +157,6 @@ export default function HomePage() {
 						))}
 					</div>
 				</section>
-        <FeaturedStoreItems />
 
 				{env.DEV_DEMO_NOTES === "true" && <Features />}
 
@@ -198,11 +179,6 @@ export default function HomePage() {
 			<SiteFooter />
 		</>
 	);
-
-      </GeneralShell>
-      <SiteFooter />
-    </>
-  );
 }
 
 /**
