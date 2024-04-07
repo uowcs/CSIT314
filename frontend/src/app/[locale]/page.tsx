@@ -25,43 +25,44 @@ import { productCategories } from "~/server/config/products";
 import { Card, CardContent } from "~/islands/primitives/card";
 
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "~/islands/primitives/ui/carousel"
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "~/islands/primitives/ui/carousel";
 
 export async function generateMetadata({ params }) {
-  const t = await getTranslations();
-  const metadata: Metadata = {
-    title: `${t("metadata.title.home")} – ${siteConfig.name}`,
-  };
-  return metadata;
+	const t = await getTranslations();
+	const metadata: Metadata = {
+		title: `${t("metadata.title.home")} – ${siteConfig.name}`,
+	};
+	return metadata;
 }
 
-
-
 export default function HomePage() {
-  // useTranslations works both on the server and client
-  // we only need the getTranslations on async components
-  const t = useTranslations();
+	// useTranslations works both on the server and client
+	// we only need the getTranslations on async components
+	const t = useTranslations();
 
-  return (
-    <>
-      <SiteHeader />
-      <GeneralShell>
-      <section aria-labelledby="hero-heading" className="w-screen  mx-auto flex mb-2 mt-1 items-center justify-center text-center" id="hero">
-
-        {/* <section
+	return (
+		<>
+			<SiteHeader />
+			<GeneralShell>
+				<section
+					aria-labelledby="hero-heading"
+					className="w-screen  mx-auto flex mb-2 mt-1 items-center justify-center text-center"
+					id="hero"
+				>
+					{/* <section
           aria-labelledby="hero-heading"
           className="mx-auto mb-2 mt-1 flex w-full flex-col items-center justify-center gap-4 pt-10 text-center"
           id="hero"
         > */}
 
-        {/* <div className="mt-3 flex flex-wrap items-center justify-center gap-4"> */}
+					{/* <div className="mt-3 flex flex-wrap items-center justify-center gap-4"> */}
 
-        {/* <Link
+					{/* <Link
               className="border-2 border-zinc-900 dark:border-zinc-800"
               href="/dashboard/billing"
               size="lg"
@@ -71,33 +72,34 @@ export default function HomePage() {
           
         </Link> */}
 
-        {/* Home Page Food Categories*/}
+					{/* Home Page Food Categories*/}
 
-      <Carousel
-      opts={{
-        align: "start",
-      }}
-      className="w-10/12	h-auto"
-    >
-      <CarouselContent>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-1/7 lg:basis-1/5">
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center h-12 justify-center p-6">
-                  <span className="text-3xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+					<Carousel
+						opts={{
+							align: "start",
+						}}
+						className="w-10/12	h-auto"
+					>
+						<CarouselContent>
+							{Array.from({ length: 10 }).map((_, index) => (
+								<CarouselItem key={index} className="md:basis-1/7 lg:basis-1/5">
+									<div className="p-1">
+										<Card>
+											<CardContent className="flex aspect-square items-center h-12 justify-center p-6">
+												<span className="text-3xl font-semibold">
+													{index + 1}
+												</span>
+											</CardContent>
+										</Card>
+									</div>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselPrevious />
+						<CarouselNext />
+					</Carousel>
 
-
-{/* 
+					{/* 
           <div className="mt-3 flex flex-wrap items-center justify-center gap-4">
             {env.DEV_DEMO_NOTES === "true" ? (
               <Link
@@ -130,52 +132,51 @@ export default function HomePage() {
                 : `${t("landing.sell-now")}`}
             </Link>
           </div> */}
+				</section>
 
-        </section>
+				<FeaturedStoreItems />
 
-        <FeaturedStoreItems />
+				<section
+					aria-labelledby="categories-heading"
+					className="py-1"
+					id="categories"
+				>
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+						{productCategories.map((category) => (
+							<NavLink
+								aria-label={`${t("demo.aria-label-goto")} ${category.title}`}
+								href={`/categories/${category.title}`}
+								key={category.title}
+							>
+								<h3 className="flex h-12 items-center justify-center rounded-lg bg-zinc-100 font-medium capitalize text-zinc-900 transition-colors dark:bg-zinc-900 dark:text-zinc-200">
+									{category.title}
+								</h3>
+							</NavLink>
+						))}
+					</div>
+				</section>
 
-        <section
-          aria-labelledby="categories-heading"
-          className="py-1"
-          id="categories"
-        >
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-            {productCategories.map((category) => (
-              <NavLink
-                aria-label={`${t("demo.aria-label-goto")} ${category.title}`}
-                href={`/categories/${category.title}`}
-                key={category.title}
-              >
-                <h3 className="flex h-12 items-center justify-center rounded-lg bg-zinc-100 font-medium capitalize text-zinc-900 transition-colors dark:bg-zinc-900 dark:text-zinc-200">
-                  {category.title}
-                </h3>
-              </NavLink>
-            ))}
-          </div>
-        </section>
+				{env.DEV_DEMO_NOTES === "true" && <Features />}
 
-        {env.DEV_DEMO_NOTES === "true" && <Features />}
+				<FrequentlyAskedQuestions />
 
-        <FrequentlyAskedQuestions />
-
-        <section
-          aria-labelledby="create-a-store-banner-heading"
-          className="mb-14 mt-10 grid place-items-center gap-6 bg-card px-6 text-center text-card-foreground"
-          id="create-a-store-banner"
-        >
-          <div className="text-xl font-medium sm:text-2xl">
-            {t("landing.footer-cta")}
-          </div>
-          <Link href="/dashboard/stores" size="lg" variant="secondary">
-            {t("landing.get-started-btn")}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </section>
-      </GeneralShell>
-      <SiteFooter />
-    </>
-  );
+				<section
+					aria-labelledby="create-a-store-banner-heading"
+					className="mb-14 mt-10 grid place-items-center gap-6 bg-card px-6 text-center text-card-foreground"
+					id="create-a-store-banner"
+				>
+					<div className="text-xl font-medium sm:text-2xl">
+						{t("landing.footer-cta")}
+					</div>
+					<Link href="/dashboard/stores" size="lg" variant="secondary">
+						{t("landing.get-started-btn")}
+						<ArrowRight className="ml-2 h-4 w-4" />
+					</Link>
+				</section>
+			</GeneralShell>
+			<SiteFooter />
+		</>
+	);
 }
 
 /**
