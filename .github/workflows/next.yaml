@@ -18,7 +18,8 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
-
+      - name: move into the frontend folder
+        run: cd frontend
       - name: Install Dependencies
         run: npm install
 
