@@ -333,7 +333,7 @@
     "lemonsqueezy.ts": "^0.1.7",
     "lint-staged": "^15.2.2",
     "markdown-it-shikiji": "^0.10.2",
-    "mysql2": "^3.9.3",
+    "mysql2": "^3.9.4",
     "next-secure-headers": "^2.2.0",
     "npm-check": "^6.0.1",
     "npm-run-all2": "^6.1.2",
