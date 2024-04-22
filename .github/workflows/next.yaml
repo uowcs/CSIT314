@@ -24,21 +24,18 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'npm'
-        working-directory: ./frontend
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Setup and install dependencies
         working-directory: ./frontend
-
-      - name: ESLint Check
-        run: npm run lint
-        working-directory: ./frontend
-        # Ensure your package.json has a lint script that runs eslint.
+        run: |
+          npm install
+          npm run lint
 
       - name: Snyk Vulnerability Scan
         uses: snyk/actions/node@master
@@ -46,8 +43,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-        working-directory: ./frontend
-        # You must add the SNYK_TOKEN secret in your repository settings on GitHub.
 
 
   # build-and-test:
