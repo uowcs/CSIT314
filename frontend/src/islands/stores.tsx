@@ -21,6 +21,7 @@ import {
 import { storeSortOptions, storeStatusOptions } from "~/server/config/stores";
 
 import { FacetedFilter } from "./faceted-filter";
+import { PageHeaderHeading } from "./navigation/page-header";
 
 interface StoresProps extends React.HTMLAttributes<HTMLDivElement> {
   stores: CuratedStore[];
@@ -135,7 +136,12 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
           </p>
         </div>
       : null}
+      <div className="flex flex-col gap-4 py-4">
+        <PageHeaderHeading size="sm">
+        Stores close to your area
+        </PageHeaderHeading>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
         {stores.map((store) => (
           <StoreCard
             key={store.id}
@@ -144,6 +150,38 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
           />
         ))}
       </div>
+      </div>
+      <div className="flex flex-col gap-4 py-4">
+        <PageHeaderHeading size="sm">
+          Top recomendation for you
+        </PageHeaderHeading>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+        {stores.map((store) => (
+          <StoreCard
+            key={store.id}
+            href={`/products?store_ids=${store.id}`}
+            store={store}
+          />
+        ))}
+      </div>
+      </div>
+      <div className="flex flex-col gap-4 py-4">
+        <PageHeaderHeading size="sm">
+        Taste the Asian Cusines !
+        </PageHeaderHeading>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+        {stores.map((store) => (
+          <StoreCard
+            key={store.id}
+            href={`/products?store_ids=${store.id}`}
+            store={store}
+          />
+        ))}
+      </div>
+      </div>
+
       {stores.length ?
         <PaginationButton
           pageCount={pageCount}

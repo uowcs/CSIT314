@@ -74,11 +74,12 @@ export const metadata: Metadata = {
   description: "Manage your purchases",
 };
 
-const product = await db
+const listOfPurchasedProducts = await db
   .select({
     id: products.id,
     name: products.name,
     storeId: products.storeId,
+    storeName: stores.name, // Added store name here
     images: products.images,
     category: products.category,
     price: products.price,
@@ -89,12 +90,20 @@ const product = await db
   .from(products)
   .limit(8)
   .leftJoin(stores, eq(products.storeId, stores.id))
-  .groupBy(products.id)
+  .groupBy(products.id, stores.name) // Include stores.name in groupBy if it affects the aggregation
   .orderBy(desc(sql`MAX(${stores.stripeAccountId})`), desc(products.createdAt));
 
 export default async function PurchasesPage() {
   const session = await getServerAuthSession();
   if (!session) redirect("/auth");
+
+  // async function getStoreName(storeId: string): Promise<string> {
+  //   'use server'
+  //   const store = await db.select({ name: stores.name }).from(stores).where({
+  //     id: storeId,
+  //   });
+  //   return store[0].name;
+  // }
 
   return (
     <Shell variant="sidebar">
@@ -109,9 +118,7 @@ export default async function PurchasesPage() {
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
               <CardTitle>Purchases made so far !</CardTitle>
-              <CardDescription>
-                View and manage your purchases.
-              </CardDescription>
+              <CardDescription>View and manage your purchases.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -121,6 +128,7 @@ export default async function PurchasesPage() {
                       <span className="sr-only">Image</span>
                     </TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Store</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Price</TableHead>
                     {/* <TableHead className="hidden md:table-cell">
@@ -132,7 +140,7 @@ export default async function PurchasesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {product.map((product) => (
+                  {listOfPurchasedProducts.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>
                         {(product.images || []).map((image, index) => (
@@ -148,6 +156,10 @@ export default async function PurchasesPage() {
                       </TableCell>
                       <TableCell className="font-medium">
                         {product.name}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {/* {getStoreName(product.storeId)} */}
+                        {product.storeName}
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{product.category}</Badge>
