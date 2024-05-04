@@ -6,6 +6,7 @@ import { db } from "~/data/db";
 import { orders, stores, type Order } from "~/data/db/schema";
 import { env } from "~/env.mjs";
 import { OrdersTableShell } from "~/islands/wrappers/orders-table-shell";
+import {AcceptRejectOrdersTableShell} from "~/islands/wrappers/acceptOrReject-orders-table-shell";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
@@ -100,9 +101,64 @@ export default async function OrdersPage({
     };
   });
 
+    // Transaction is used to ensure both queries are executed in a single transaction
+    const { tempitem, temptotal } = await db.transaction(async (tx) => {
+      const tempitem = await tx
+        .select()
+        .from(orders)
+        .limit(limit)
+        .offset(offset)
+        .where(
+          and(
+            eq(orders.storeId, storeId),
+            // Filter by name
+            typeof email === "string" ?
+              like(orders.email, `%${email}%`)
+            : undefined,
+          ),
+        )
+        .orderBy(
+          column && column in orders ?
+            order === "asc" ?
+              asc(orders[column])
+            : desc(orders[column])
+          : desc(orders.createdAt),
+        );
+  
+      const temptotal = await tx
+        .select({
+          count: sql<number>`count(${orders.id})`,
+        })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.storeId, storeId),
+            // Filter by name
+            typeof email === "string" ?
+              like(orders.email, `%${email}%`)
+            : undefined,
+          ),
+        )
+        .then((res) => res[0]?.count ?? 0);
+  
+      return {
+        tempitem,
+        temptotal,
+      };
+    });
+
   const pageCount = Math.ceil(total / limit);
+  const tempPageCount = Math.ceil(temptotal / limit);
 
   // TODO: UNCOMMENT !! TEMP SOLUTION
-  // return <OrdersTableShell data={items} pageCount={pageCount} />;
+  return (
+    <div>
+      <h1 className="m-2 font-extrabold text-lg">Accept/Reject orders</h1>
+      <AcceptRejectOrdersTableShell data={tempitem} pageCount={tempPageCount} />
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+      <h1 className="m-2 font-extrabold text-lg">Order history</h1>
+      <OrdersTableShell data={items} pageCount={pageCount} />
+    </div>
+  )
   return <h1>Orders</h1>;
 }

@@ -87,16 +87,16 @@ export async function getOrderLineItemsAction(
       if (!payment?.stripeAccountId) return lineItems;
 
       // TODO: FIX: Create new address in DB
-      /* const stripeAddress = input.paymentIntent.shipping?.address;
-      const newAddress = await db.insert(addresses).values({
-        line1: stripeAddress?.line1,
-        line2: stripeAddress?.line2,
-        city: stripeAddress?.city,
-        state: stripeAddress?.state,
-        country: stripeAddress?.country,
-        postalCode: stripeAddress?.postal_code,
-      });
-      if (!newAddress.insertId) throw new Error("No address created."); */
+      // const stripeAddress = input.paymentIntent.shipping?.address;
+      // const newAddress = await db.insert(addresses).values({
+      //   line1: stripeAddress?.line1,
+      //   line2: stripeAddress?.line2,
+      //   city: stripeAddress?.city,
+      //   state: stripeAddress?.state,
+      //   country: stripeAddress?.country,
+      //   postalCode: stripeAddress?.postal_code,
+      // });
+      // if (!newAddress.insertId) throw new Error("No address created."); 
 
       // Create new order in db
       await db.insert(orders).values({

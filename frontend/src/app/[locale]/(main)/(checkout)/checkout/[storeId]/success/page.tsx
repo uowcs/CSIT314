@@ -51,21 +51,21 @@ export default async function OrderSuccessPage({
     where: eq(stores.id, storeId),
   });
 
-  /* const { isVerified, paymentIntent } = await getPaymentIntentAction({
+  const { isVerified, paymentIntent } = await getPaymentIntentAction({
     storeId,
     paymentIntentId: typeof payment_intent === "string" ? payment_intent : "",
     deliveryPostalCode:
       typeof delivery_postal_code === "string" ? delivery_postal_code : "",
-  }); */
+  }); 
 
-  /* const lineItems =
+  const lineItems =
     isVerified && paymentIntent
       ? await getOrderLineItemsAction({
           storeId,
           items: paymentIntent?.metadata?.items,
           paymentIntent,
         })
-      : []; */
+      : []; 
 
   // TODO: REMOVE !! TEMPORARY SOLUTION
   const cartId = await getCartId();
@@ -86,7 +86,7 @@ export default async function OrderSuccessPage({
             {store?.name ?? "Store"} will be in touch with you shortly
           </PageHeaderDescription>
         </PageHeader>
-        {/* <section
+        <section
             id="order-success-cart-line-items"
             aria-labelledby="order-success-cart-line-items-heading"
             className="flex flex-col space-y-6 overflow-auto"
@@ -115,7 +115,7 @@ export default async function OrderSuccessPage({
                 )}
               </span>
             </div>
-          </section> */}
+              </section>
         <OrderSuccessActions />
       </div>
       {/* ) : (

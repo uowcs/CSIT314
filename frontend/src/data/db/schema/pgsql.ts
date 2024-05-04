@@ -230,6 +230,7 @@ export const orders = pgTable("orders", {
 	id: serial("id").primaryKey(),
 	storeId: integer("storeId").notNull(),
 	items: json("items").$type<CheckoutItem[] | null>().default(null),
+	accepted: boolean("accepted").notNull().default(false),
 	quantity: integer("quantity"),
 	amount: decimal("amount", { precision: 10, scale: 2 }).notNull().default("0"),
 	stripePaymentIntentId: text("stripePaymentIntentId").notNull(),
