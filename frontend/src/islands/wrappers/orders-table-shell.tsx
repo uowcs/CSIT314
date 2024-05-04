@@ -41,8 +41,8 @@ export function OrdersTableShell({ data, pageCount }: OrdersTableShellProps) {
             <Badge
               variant="outline"
               className={cn(
-                "pointer-events-none text-sm capitalize",
-                cell.getValue() === "paid" ? "bg-green-600" : "bg-red-600",
+                "pointer-events-none text-sm capitalize text-white",
+                cell.getValue() === "succeeded" ? "bg-green-600" : "bg-red-600",
               )}
             >
               {String(cell.getValue())}
@@ -51,26 +51,20 @@ export function OrdersTableShell({ data, pageCount }: OrdersTableShellProps) {
         },
       },
       {
-        accessorKey: "total",
+        accessorKey: "amount",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Total" />
         ),
         cell: ({ cell }) => formatPrice(cell.getValue() as number),
       },
       {
-        accessorKey: "items",
+        accessorKey: "quantity",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Item Count" />
         ),
         cell: ({ cell }) => {
-          const checkoutItems = cell.getValue() as CheckoutItem[];
-
-          const totalItems = checkoutItems.reduce(
-            (acc, item) => acc + item.quantity,
-            0,
-          );
-
-          return <span>{totalItems}</span>;
+          const checkoutItems = cell.getValue() as number;
+          return <span>{checkoutItems}</span>;
         },
       },
       {
@@ -90,12 +84,12 @@ export function OrdersTableShell({ data, pageCount }: OrdersTableShellProps) {
       columns={columns}
       data={data}
       pageCount={pageCount}
-      searchableColumns={[
-        {
-          id: "email",
-          title: "customers",
-        },
-      ]}
+      // searchableColumns={[
+      //   {
+      //     id: "email",
+      //     title: "customers",
+      //   },
+      // ]}
     />
   );
 }

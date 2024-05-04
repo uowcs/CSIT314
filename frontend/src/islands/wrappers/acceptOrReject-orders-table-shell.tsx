@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { type ColumnDef } from "@tanstack/react-table";
-import { type CheckoutItem } from "~/types";
 import { cn, formatDate, formatPrice } from "~/utils";
 
 import { type Order } from "~/data/db/schema";
@@ -41,8 +40,8 @@ export function AcceptRejectOrdersTableShell({ data, pageCount }: OrdersTableShe
             <Badge
               variant="outline"
               className={cn(
-                "pointer-events-none text-sm capitalize",
-                cell.getValue() === "paid" ? "bg-green-600" : "bg-red-600",
+                "pointer-events-none text-sm capitalize text-white",
+                cell.getValue() === "succeeded" ? "bg-green-600" : "bg-red-600",
               )}
             >
               {String(cell.getValue())}
@@ -51,26 +50,20 @@ export function AcceptRejectOrdersTableShell({ data, pageCount }: OrdersTableShe
         },
       },
       {
-        accessorKey: "total",
+        accessorKey: "amount",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Total" />
         ),
         cell: ({ cell }) => formatPrice(cell.getValue() as number),
       },
       {
-        accessorKey: "items",
+        accessorKey: "quantity",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Item Count" />
         ),
         cell: ({ cell }) => {
-          const checkoutItems = cell.getValue() as CheckoutItem[];
-
-          const totalItems = checkoutItems.reduce(
-            (acc, item) => acc + item.quantity,
-            0,
-          );
-
-          return <span>{totalItems}</span>;
+          const checkoutItems = cell.getValue() as number;
+          return <span>{checkoutItems}</span>;
         },
       },
       {
@@ -105,12 +98,12 @@ export function AcceptRejectOrdersTableShell({ data, pageCount }: OrdersTableShe
       columns={columns}
       data={data}
       pageCount={pageCount}
-      searchableColumns={[
-        {
-          id: "email",
-          title: "customers",
-        },
-      ]}
+      // searchableColumns={[
+      //   {
+      //     id: "email",
+      //     title: "customers",
+      //   },
+      // ]}
     />
   );
 }
