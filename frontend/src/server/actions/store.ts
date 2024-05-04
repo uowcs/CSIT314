@@ -2,13 +2,50 @@
 
 import { revalidatePath } from "next/cache";
 import { slugify } from "~/utils";
-import { and, asc, desc, eq, gt, isNull, lt, not, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, isNull, like, lt, not, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "~/data/db";
-import { products, stores, type Store } from "~/data/db/schema";
+import { stores, type Store } from "~/data/db/schema";
 import type { getStoreSchema } from "~/data/validations/store";
 import { getStoresSchema, storeSchema } from "~/data/validations/store";
+
+export async function filterStoresAction(query: string) {
+  if (query.length === 0) return null;
+
+  // Fetch filtered stores based on the query
+  const filteredStores = await db
+    .select({
+      id: stores.id,
+      name: stores.name,
+    })
+    .from(stores)
+    .limit(10);
+
+  // Log the fetched data for debugging
+  console.log("Filtered Stores:", filteredStores);
+
+  // Group stores by name
+  const storeMap = new Map();
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  filteredStores.forEach(store => {
+    if (!storeMap.has(store.name)) {
+      storeMap.set(store.name, []);
+    }
+    storeMap.get(store.name).push(store);
+  });
+
+  // Convert the Map to the array structure you need
+  const storesByName = Array.from(storeMap, ([name, stores]) => ({
+    name,
+    stores
+  }));
+
+  return storesByName;
+}
+
+
 
 export async function getStoresAction(
   rawInput: z.infer<typeof getStoresSchema>,
@@ -37,7 +74,7 @@ export async function getStoresAction(
         .from(stores)
         .limit(limit)
         .offset(offset)
-        .leftJoin(products, eq(stores.id, products.storeId))
+        // .leftJoin(products, eq(stores.id, products.storeId))
         .where(
           and(
             input.userId ? eq(stores.userId, input.userId) : undefined,
