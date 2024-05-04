@@ -5,6 +5,7 @@
  */
 import { Button } from "~/islands/primitives/ui/button"
 import { CardContent, Card } from "~/islands/primitives/ui/card"
+import { Badge } from "~/islands/primitives/ui/badge"
 import {
 
   Carousel,
@@ -13,9 +14,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/islands/primitives/ui/carousel"
-import { Badge } from "~/islands/primitives/ui/badge"
-
 export async function ProtmotionBanner() {
+  
   return (
     <div>
 <Carousel className="w-full">
