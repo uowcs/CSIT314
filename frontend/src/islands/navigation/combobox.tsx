@@ -6,7 +6,8 @@ import { cn } from "~/utils";
 import { Circle, File, Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-import { type Product } from "~/data/db/schema";
+import { stores, type Store } from "~/data/db/schema";
+import { products, type Product } from "~/data/db/schema";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useHotkeys } from "~/hooks/use-hotkeys";
 import { Icons } from "~/islands/icons";
@@ -23,6 +24,7 @@ import {
 import { Skeleton } from "~/islands/primitives/skeleton";
 import { filterProductsAction } from "~/server/actions/product";
 import { navItems } from "~/server/links";
+import { filterStoresAction } from "~/server/actions/store";
 
 type RouteHref = never;
 
@@ -45,22 +47,54 @@ export function Combobox({
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
-  const [data, setData] = useState<
+  const [data_product, setData_product] = useState<
     | {
         category: Product["category"];
-        products: Pick<Product, "id" | "name" | "category">[];
+        products: Pick<Product, "id" | "name" | "category" | "storeId">[];
       }[]
     | null
-  >(null);
+  >(null)
+  const [data_store, setData_store] = useState<
+    | {
+        name: Store["name"];
+        stores: Pick<Store, "id" | "name">[];
+      }[]
+    | null
+  >(null)
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (debouncedQuery.length === 0) setData(null);
+    if (debouncedQuery.length === 0) setData_product(null);
 
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
         const data = await filterProductsAction(debouncedQuery);
-        setData(data);
+      
+        setData_product(data);
+      
+      });
+    }
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    if (debouncedQuery.length === 0) setData_store(null);
+
+    if (debouncedQuery.length > 0) {
+      // startTransition(async () => {
+
+      //   //Ash 
+      //   const data = await filterStoresAction(debouncedQuery);
+      //     setData_store(data);
+
+      // });
+      startTransition(async () => {
+        try {
+          const data = await filterStoresAction(debouncedQuery);
+          console.log("Fetched Stores Data:", data); // Debug log
+          setData_store(data);
+        } catch (error) {
+          console.error("Error fetching stores:", error);
+        }
       });
     }
   }, [debouncedQuery]);
@@ -116,6 +150,9 @@ export function Combobox({
           <abbr title="Control">⌘</abbr>K
         </kbd>
       </Button>
+
+
+      
       <CommandDialog position="top" open={isOpen} onOpenChange={setIsOpen}>
         <CommandInput
           placeholder={tPlaceholder}
@@ -123,6 +160,7 @@ export function Combobox({
           onValueChange={setQuery}
         />
         <CommandList>
+          
           <CommandEmpty
             className={cn(isPending ? "hidden" : "py-6 text-center text-sm")}
           >
@@ -136,7 +174,34 @@ export function Combobox({
               <Skeleton className="h-8 rounded-sm" />
               <Skeleton className="h-8 rounded-sm" />
             </div>
-          : data?.map((group) => (
+          
+          : Array.isArray(data_store) ? data_store.map((group) => (
+              <CommandGroup
+                key={group.name}
+                className="capitalize"
+                heading={group.name}
+              >
+                {group.stores.map((item) => (
+                  <CommandItem
+                    key={item.id}
+                    onSelect={() =>
+                      handleSelect(() => router.push(`/store/${item.id}`))
+                    }
+                  >
+                    {item.name}
+
+                  </CommandItem>
+                ))}                
+              </CommandGroup>
+            )) : null
+          }
+          {isPending ?
+            <div className="space-y-1 overflow-hidden px-1 py-2">
+              <Skeleton className="h-4 w-10 rounded" />
+              <Skeleton className="h-8 rounded-sm" />
+              <Skeleton className="h-8 rounded-sm" />
+            </div>
+          : data_product?.map((group) => (
               <CommandGroup
                 key={group.category}
                 className="capitalize"
@@ -150,13 +215,15 @@ export function Combobox({
                     }
                   >
                     {item.name}
+
                   </CommandItem>
                 ))}
-              </CommandGroup>
-            ))
-          }
+                </CommandGroup>
+          ))}
+          
+          
           <CommandSeparator />
-          {/* {navItems.sidebarNav.map((group) => (
+          {navItems.sidebarNav.map((group) => (
             <CommandGroup key={group.title} heading={group.id}>
               {group.items.map((item) => (
                 <CommandItem
@@ -173,7 +240,8 @@ export function Combobox({
                 </CommandItem>
               ))}
             </CommandGroup>
-          ))} */}
+          ))}
+          
           {/* <CommandSeparator />
           <CommandGroup heading="Links">
             {navItems.mainNav
