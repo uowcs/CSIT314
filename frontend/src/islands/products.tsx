@@ -47,6 +47,7 @@ type ProductsProps = React.HTMLAttributes<HTMLDivElement> & {
 	storePageCount?: number;
 	session?: any;
 	tAddToCart: string;
+	isUserPremium: boolean;
 };
 
 export async function Products({
@@ -58,6 +59,7 @@ export async function Products({
 	stores,
 	storePageCount,
 	session,
+	isUserPremium,
 	...props
 }: ProductsProps) {
 	const router = useRouter();
@@ -171,6 +173,8 @@ export async function Products({
 
 	const guestEmail = getCookie("GUEST_EMAIL")?.toString() || null;
 
+//   const user = await getUserById(session.id);
+//   const premiumStatus = user?.isPremium;
 	return (
 		<section className="flex flex-col space-y-6" {...props}>
 			<div className="flex items-center space-x-2">
@@ -428,6 +432,7 @@ export async function Products({
 								variant="default"
 								tAddToCart={tAddToCart}
 								userID={session}
+								isUserPremium={isUserPremium}
 							/>
 						))}
 					</>

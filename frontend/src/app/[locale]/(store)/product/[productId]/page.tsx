@@ -60,7 +60,12 @@ export async function generateMetadata({
 export default async function ProductPage({ params }: ProductPageProperties) {
   const session = await getServerAuthSession();
   const guestEmail = getCookie("GUEST_EMAIL")?.toString() || null;
-
+  let user = null;
+  let premiumStatus = false;
+  if(session != undefined){
+    user = await getUserById(session.id);
+    premiumStatus = user?.isPremium;
+  }
   const t = await getTranslations();
 
   const productId = Number(params.productId);
@@ -135,9 +140,12 @@ export default async function ProductPage({ params }: ProductPageProperties) {
         <div className="flex w-full flex-col gap-4 md:w-1/2">
           <div className="space-y-2">
             <h2 className="line-clamp-1 text-2xl font-bold">{product.name}</h2>
-            <p className="text-base text-muted-foreground">
-              {formatPrice(product.price)}
-            </p>
+
+						{premiumStatus ? (
+							<><div style={{ textDecoration: 'line-through' }}>{product.price}</div><div>{formatPrice(product.price * 0.9)}</div></>
+						) : (
+							<div>{formatPrice(product.price)}</div>
+						)}
             {store ?
               <Link
                 href={`/products?store_ids=${store.id}`}
@@ -225,6 +233,7 @@ export default async function ProductPage({ params }: ProductPageProperties) {
                   storeId={product.storeId}
                   className="min-w-[260px]"
                   tAddToCart={t("store.product.addToCart")}
+                  isUserPremium={premiumStatus}
                 />
               ))}
             </div>
