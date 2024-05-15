@@ -10,7 +10,7 @@ import { ProductCard } from "~/islands/modules/cards/product-card";
 import { StoreCard } from "~/islands/modules/cards/store-card-default";
 import { buttonVariants } from "~/islands/primitives/button";
 import { Link } from "~/navigation";
-import { getServerAuthSession } from "~/utils/auth/users";
+import { getServerAuthSession, getUserById } from "~/utils/auth/users";
 export async function FeaturedStoreItems() {
   // todo: fix strange product images browser console warning message:
   // todo: "Ignoring unsupported entryTypes: largest-contentful-paint"
@@ -55,6 +55,15 @@ export async function FeaturedStoreItems() {
     .orderBy(desc(stores.stripeAccountId), desc(sql<number>`count(*)`));
 
   const session = await getServerAuthSession();
+  // let premiumStatus = getUserById(session.id).then(user => user?.isPremium);
+  //get user from database based on session.iD
+  let user = null;
+  let premiumStatus = null;
+  if(session != undefined){
+    user = await getUserById(session.id);
+    premiumStatus = user?.isPremium;
+  }
+  // console.log("premiumStatus", premiumStatus);
   const guestEmail = getCookie("GUEST_EMAIL")?.toString() || null;
 
   return (
@@ -93,6 +102,7 @@ export async function FeaturedStoreItems() {
                   product={product}
                   storeId={Number(product.storeId)}
                   tAddToCart={t("store.product.addToCart")}
+                  isUserPremium={premiumStatus}
                 />
               ))}
             </>

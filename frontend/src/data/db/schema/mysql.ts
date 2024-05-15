@@ -42,6 +42,7 @@ export const users = mysqlTable("user", {
   stripeSubscriptionId: text("stripeSubscriptionId"),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
+  isPremium: boolean("isPremium").notNull().default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
