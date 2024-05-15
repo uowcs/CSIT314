@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { desc, eq, sql } from "drizzle-orm";
 import { Home, Package2, PanelLeft, Search, Users2 } from "lucide-react";
 
+// src/islands/primitives/ui
+import Rating from '../../../../../../../src/islands/primitives/ui/rating-star'
+
 import { db } from "~/data/db";
 import { products, stores, type Product, type Store } from "~/data/db/schema";
 import { fullURL } from "~/data/meta/builder";
@@ -13,6 +16,18 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "~/islands/navigation/page-header";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/islands/primitives/ui/alert-dialog";
+import { Textarea } from "~/islands/primitives/ui/textarea";
 import { Badge } from "~/islands/primitives/ui/badge";
 import {
   Breadcrumb,
@@ -165,6 +180,29 @@ export default async function PurchasesPage() {
                         <Badge variant="outline">{product.category}</Badge>
                       </TableCell>
                       <TableCell>${product.price}</TableCell>
+                      <TableCell>
+                        {" "}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline">Rate this meal !</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                We hope, we have served at your best
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+
+                                <Rating productid={product.id} />
+                                {/* Rating for item in purchases */}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
                       {/* <TableCell className="hidden md:table-cell">
                         {new Date(product.createdAt).toLocaleString()}
                       </TableCell> */}

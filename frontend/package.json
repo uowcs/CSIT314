@@ -292,6 +292,7 @@
     "ava": "^6.1.2",
     "cross-env": "^7.0.3",
     "cspell": "^8.6.1",
+    "daisyui": "^4.11.1",
     "dotenv-cli": "^7.4.1",
     "drizzle-kit": "^0.20.14",
     "eslint": "npm:eslint-ts-patch@8.56.0-0",
