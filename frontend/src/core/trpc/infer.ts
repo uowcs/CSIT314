@@ -1,4 +1,3 @@
-// !! todo: this file may not work as expected
 
 import { createTRPCReact } from "@trpc/react-query";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";

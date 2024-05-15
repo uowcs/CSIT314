@@ -19,16 +19,11 @@ import postgres from "postgres";
 
 import { env } from "~/env.mjs";
 
-import * as schemaMysql from "./schema/mysql";
 import * as schemaPgsql from "./schema/pgsql";
 
 // Connection strings for MySQL and PostgreSQL
 // Add the ssl query parameter if it's missing
-const csMysql: string = addQueryParamIfMissed(
-  env.DATABASE_URL,
-  "ssl",
-  JSON.stringify({ rejectUnauthorized: true }),
-);
+
 const csPgsql: string = addQueryParamIfMissed(
   env.DATABASE_URL,
   "sslmode",
@@ -39,7 +34,6 @@ const csPgsql: string = addQueryParamIfMissed(
 // todo: how to type db properly
 
 let db:
-  | PlanetScaleDatabase<typeof schemaMysql>
   | PostgresJsDatabase<typeof schemaPgsql>
   | any;
 
@@ -57,20 +51,6 @@ try {
   }
 
   switch (dbProvider) {
-    case "planetscale": {
-      const clientPlanetscale = new ClientPlanetscale({
-        host: process.env["DATABASE_HOST"],
-        username: process.env["DATABASE_USERNAME"],
-        password: process.env["DATABASE_PASSWORD"],
-      });
-      db = drizzlePlanetscale(clientPlanetscale, {
-        schema: schemaMysql,
-        logger: false,
-      });
-      break;
-    }
-    case "railway":
-    case "vercel":
     case "neon": {
       db = drizzlePostgres(postgres(csPgsql, { ssl: "allow", max: 1 }), {
         schema: schemaPgsql,

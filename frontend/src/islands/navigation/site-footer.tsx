@@ -3,7 +3,6 @@ import { Github, Twitter } from "lucide-react";
 
 import { siteConfig } from "~/app";
 import { env } from "~/env.mjs";
-import { SubscribeToNewsletterForm } from "~/forms/newsletter-subscribe";
 import { buttonVariants } from "~/islands/primitives/button";
 import { Shell } from "~/islands/wrappers/shell-variants";
 import { Link } from "~/navigation";
@@ -50,10 +49,6 @@ export async function SiteFooter() {
             aria-labelledby="newsletter-heading"
             className="flex flex-col items-center space-y-3 lg:items-start"
           >
-            <h4 className="text-base font-medium">
-              Subscribe to our newsletter
-            </h4>
-            <SubscribeToNewsletterForm />
             <div className="flex items-center space-x-1">
               {/* <Link
                 href={siteConfig.links.github}

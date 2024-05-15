@@ -84,12 +84,6 @@ export default async function UserMenu() {
                 Order Status
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/dashboard/admin" className="flex items-center">
-                <Icons.terminal className="mr-2 h-4 w-4" aria-hidden="true" />
-                Admin Page
-              </Link>
-            </DropdownMenuItem>
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />

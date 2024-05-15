@@ -46,11 +46,5 @@ export const dashboardConfig: DashboardConfig = {
       icon: "spinner",
       items: [],
     },
-    {
-      title: "Admin Page",
-      href: "/dashboard/admin",
-      icon: "terminal",
-      items: [],
-    },
   ],
 };

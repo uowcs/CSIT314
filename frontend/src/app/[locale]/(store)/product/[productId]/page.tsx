@@ -1,10 +1,3 @@
-/**
- * Product Page
- * ============
- *
- * @see https://github.com/gustavoguichard/string-ts#-api
- */
-
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { formatPrice } from "~/utils";

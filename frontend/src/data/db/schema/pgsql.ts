@@ -180,7 +180,14 @@ export const products = pgTable("products", {
 	tags: json("tags").$type<string[] | null>().default(null),
 	createdAt: timestamp("createdAt").defaultNow(),
 });
-
+export const reviews = pgTable("reviews", {
+	id: serial("id").primaryKey(),
+	userId: text("userId").notNull(),
+	productId: integer("productId").notNull(),
+	rating: integer("rating").notNull(),
+	comment: text("comment"),
+	createdAt: timestamp("createdAt").defaultNow(),
+});
 export const productsRelations = relations(products, ({ one }) => ({
 	store: one(stores, { fields: [products.storeId], references: [stores.id] }),
 	user: one(users, { fields: [products.storeId], references: [users.id] }),
