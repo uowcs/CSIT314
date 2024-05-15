@@ -313,7 +313,7 @@ export async function Products({
 											</Button>
 										</div>
 									</div>
-									<ScrollArea className="h-[calc(100%-10rem)]">
+									<ScrollArea className="h-1000">
 										<div className="space-y-4">
 											{stores.map((store) => (
 												<div
