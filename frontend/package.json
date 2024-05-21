@@ -1,11 +1,11 @@
 {
-  "name": "relivator",
-  "version": "1.2.5",
+  "name": "NomNomNow",
+  "version": "1.0",
   "private": true,
   "author": {
-    "name": "Nazarii Korniienko",
-    "email": "blefnk@gmail.com",
-    "url": "https://github.com/blefnk/relivator"
+    "name": "CSIT314",
+    "email": "mail@harsha.link",
+    "url": "https://github.com/uowcs/csit314"
   },
   "scripts": {
     "appts": "run-s test format typecheck build",
@@ -30,7 +30,6 @@
     "format:check": "prettier --check \"**/*.{js,ts,tsx,md,mdx,json}\" --cache --experimental-ternaries",
     "format:old": "run-s format:write format:check",
     "format:write": "prettier --write \"**/*.{js,ts,tsx,md,mdx,json}\" --cache --experimental-ternaries",
-    "preinstall": "run-s pnpm:only reli:config",
     "latest": "pnpm update --latest && pnpm up-trpc:next && pnpm add storybook@next @storybook/nextjs@next",
     "lint": "eslint-ts . && pnpm stylelint src/**/*.css",
     "lint:fix": "eslint-ts . --fix && pnpm stylelint --fix src/**/*.css",
@@ -259,6 +258,10 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2.11.4",
     "@ava/typescript": "^4.1.0",
+    "@babel/plugin-transform-runtime": "^7.24.3",
+    "@babel/preset-env": "^7.24.5",
+    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
     "@biomejs/biome": "^1.6.3",
     "@bufbuild/jest-environment-jsdom": "^0.1.1",
     "@commitlint/cli": "^18.6.1",
@@ -268,6 +271,7 @@
     "@cspell/dict-uk-ua": "^4.0.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@jest/transform": "^29.7.0",
     "@limegrass/eslint-plugin-import-alias": "^1.3.1",
     "@next/eslint-plugin-next": "^14.1.4",
     "@playwright/test": "^1.42.1",
@@ -275,6 +279,7 @@
     "@tailwindcss/typography": "^0.5.12",
     "@tanstack/eslint-plugin-query": "^5.28.6",
     "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^15.0.7",
     "@tokenami/dev": "^0.0.30",
     "@tokenami/ts-plugin": "^0.0.30",
     "@total-typescript/ts-reset": "^0.5.1",
@@ -290,6 +295,7 @@
     "@typescript-eslint/parser": "^7.4.0",
     "autoprefixer": "10.4.17",
     "ava": "^6.1.2",
+    "babel-jest": "^29.7.0",
     "cross-env": "^7.0.3",
     "cspell": "^8.6.1",
     "dotenv-cli": "^7.4.1",
