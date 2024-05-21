@@ -1,63 +1,47 @@
 import React from "react";
 import { Textarea } from "~/islands/primitives/ui/textarea";
 import { Button } from "~/islands/primitives/ui/button";
-import { db } from "~/data/db";
-import { redirect } from "next/navigation";
-import { toast } from "~/islands/primitives/ui/use-toast";
 import { getServerAuthSession } from "~/utils/auth/users";
+import { redirect } from "next/navigation";
+import { db } from '~/data/db'; 
+import { and, eq, not } from "drizzle-orm";
 import { reviews } from "~/data/db/schema/pgsql";
 
-export default async function Rating({ productId }) {
-  const session = await getServerAuthSession();
-  if (!session) redirect("/auth");
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const text = formData.get('reviewText');
+export default function Rating({ productId }) {
 
+  async function updateAddress(fd: FormData) {
+    "use server";
+    // Implement actual update logic here
+    console.log("review", fd.get("review"));
+    const userReview = fd.get("review") as string;
+    const user = await getServerAuthSession();
+    const userId = user?.id;
     try {
-      await db.insert(reviews).values({
-        comment: text,
-        rating: 0, // Assuming a default rating of 0 since it's not required
-        userId: session.user.id,
+      await db('reviews').insert({
+        userId: userId,
         productId: productId,
-        createdAt: new Date(),
+        rating: 3,
+        comment: userReview,
+        createdAt: new Date()  // Depending on DB setup, this might not be necessary.
       });
-      toast("Review submitted successfully", "success");
+      console.log("Review successfully inserted");
     } catch (error) {
-      console.error('Error submitting review:', error);
-      toast("Failed to submit review", "error");
+      console.error("Failed to insert review:", error);
     }
   }
 
+  
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <Textarea name="reviewText" placeholder="Type your review here." />
-        <Button type="submit">Submit Review</Button>
+      {/* styles omitted for brevity */}
+
+      <form action={updateAddress}>
+        <div className="grid w-full gap-2">
+          <Textarea id="review" name="review" placeholder="Type your message here." />
+          <Button type="submit">Send message</Button>
+        </div>
       </form>
     </>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { productId } = context.query;
-  const session = await getServerAuthSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/auth",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      productId,
-      userId: session.user.id, // Assuming the session has user ID
-    },
-  };
 }
