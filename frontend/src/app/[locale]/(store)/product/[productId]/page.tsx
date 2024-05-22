@@ -16,6 +16,7 @@ import { titleCase } from "string-ts";
 import { Link as ButtonLink } from "~/core/link";
 import { db } from "~/data/db";
 import { products, stores, users, type Product } from "~/data/db/schema";
+import { reviews, type Review } from "~/data/db/schema/pgsql";
 import { env } from "~/env.mjs";
 import { AddToCartForm } from "~/forms/add-to-cart-form";
 import { ProductCard } from "~/islands/modules/cards/product-card";
@@ -78,6 +79,21 @@ export default async function ProductPage({ params }: ProductPageProperties) {
     },
     where: eq(products.id, productId),
   });
+
+  const productReviews: Review[] = await db.query.reviews.findMany({
+    columns: {
+      userId: true,
+      rating: true,
+      comment: true,
+      createdAt: true,
+    },
+    where: eq(reviews.productId, productId),
+  });
+
+
+
+
+
 
   if (!product) notFound();
 
@@ -285,7 +301,19 @@ export default async function ProductPage({ params }: ProductPageProperties) {
           : null}
         </>
       )} */}
+          <div className="reviews-container">
+      {productReviews.map((review, index) => (
+        <div key={index} className="review">
+          <p><strong>User ID:</strong> {review.userId} <strong>Date:</strong> {new Date(review.createdAt).toLocaleDateString()}</p>
+          <p><strong>Rating:</strong> {review.rating} / 5</p>
+          <p><strong>Comment:</strong> {review.comment}</p>
+          <br/>
+        </div>
+      ))}
+    </div>
 
+      
+       
       {store && otherProducts.length > 0 ?
         <div className="overflow-hidden md:pt-6">
           <h2 className="line-clamp-1 flex-1 text-2xl font-bold">

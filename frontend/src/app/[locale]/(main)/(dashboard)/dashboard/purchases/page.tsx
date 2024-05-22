@@ -89,6 +89,8 @@ export const metadata: Metadata = {
   description: "Manage your purchases",
 };
 
+
+
 const listOfPurchasedProducts = await db
   .select({
     id: products.id,
@@ -193,7 +195,7 @@ export default async function PurchasesPage() {
                               </AlertDialogTitle>
                               <AlertDialogDescription>
 
-                                <Rating productid={product.id} />
+                                <Rating productId={product.id} />
                                 {/* Rating for item in purchases */}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
