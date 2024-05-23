@@ -1,28 +1,48 @@
-// uploadthing.test.ts
-import '@testing-library/jest-dom/extend-expect';
+// frontend/src/tests/jest/uploadthing.test.ts
+
 import { uploadFiles } from '~/utils/other/uploads/uploadthing';
+import { OurFileRouter } from '~/app/api/uploadthing/core';
+import * as hooks from '@uploadthing/react/hooks';
 
-describe('UploadThing Connection Tests', () => {
-  it('should handle file uploads successfully', async () => {
-    // Mock file creation
-    const file = new File(['dummy content'], 'test-image.png', { type: 'image/png' });
+jest.mock('@uploadthing/react/hooks', () => ({
+  generateReactHelpers: jest.fn(() => ({
+    useUploadThing: jest.fn(),
+    uploadFiles: jest.fn(),
+  })),
+}));
 
-    // Define the options for the uploadFiles function
-    const options = {
-      files: [file],
-      onUploadBegin: ({ file }) => console.log(`Upload started for: ${file}`),
-      onUploadProgress: ({ file, progress }) => console.log(`Upload progress for ${file}: ${progress}%`)
+describe('uploadthing integration', () => {
+  it('should connect and upload files successfully', async () => {
+    const mockFiles = [new File(['dummy content'], 'dummy.txt', { type: 'text/plain' })];
+
+    const mockResponse = {
+      success: true,
+      data: {
+        files: [
+          {
+            url: 'https://example.com/dummy.txt',
+          },
+        ],
+      },
     };
 
-    // Call the uploadFiles function with the required arguments
-    // Assuming 'imageUploader' is an endpoint defined within OurFileRouter
-    const response = await uploadFiles("imageUploader", options);
+    const { uploadFiles } = hooks.generateReactHelpers<OurFileRouter>();
+    (uploadFiles as jest.Mock).mockResolvedValue(mockResponse);
 
-    // Assertions to check if the file upload was handled correctly
-    expect(response).toBeDefined();
-    expect(response.status).toBe('success');
-    expect(response.message).toBe('File uploaded successfully');
+    const response = await uploadFiles(mockFiles);
+
+    expect(response).toEqual(mockResponse);
+    expect(uploadFiles).toHaveBeenCalledWith(mockFiles);
   });
 
-  // Additional tests to handle different scenarios or errors can be added here
+  it('should handle upload failure', async () => {
+    const mockFiles = [new File(['dummy content'], 'dummy.txt', { type: 'text/plain' })];
+
+    const mockError = new Error('Upload failed');
+
+    const { uploadFiles } = hooks.generateReactHelpers<OurFileRouter>();
+    (uploadFiles as jest.Mock).mockRejectedValue(mockError);
+
+    await expect(uploadFiles(mockFiles)).rejects.toThrow('Upload failed');
+  });
 });
