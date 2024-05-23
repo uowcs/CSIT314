@@ -1,0 +1,17 @@
+config:
+  target: 'http://localhost:3000' # Update to your application's URL
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - flow:
+    - get:
+        url: "/"
+    - get:
+        url: "/about"
+    - get:
+        url: "/contact"
+    - get:
+        url: "/products"
+    - get:
+        url: "/services"
