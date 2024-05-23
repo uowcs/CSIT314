@@ -1,35 +1,51 @@
-// clerk.test.ts
-// clerk.test.ts
-import React from 'react';
-import { render } from '@testing-library/react';
-import AuthProvider from './src/islands/providers/auth-provider';
-import { ClerkProvider } from "@clerk/nextjs";
+// frontend/src/tests/jest/clerk.test.ts
+import { getServerAuthSession } from '~/utils/auth/users';
+import { currentUser } from '@clerk/nextjs';
+import { env } from '~/env.mjs';
 
-// Mocks
 jest.mock('@clerk/nextjs', () => ({
-  ClerkProvider: ({ children }) => <div>{children}</div>
+  currentUser: jest.fn(),
 }));
-jest.mock('./src/core/auth/authjs', () => ({
-  getNextAuthServerSession: jest.fn(() => Promise.resolve({ user: { id: '123' } }))
-}));
+
 jest.mock('~/env.mjs', () => ({
   env: {
     NEXT_PUBLIC_AUTH_PROVIDER: 'clerk',
-    CLERK_SECRET_KEY: 'fake_secret_key',
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: 'fake_publishable_key'
-  }
+    DATABASE_URL: 'postgres://localhost:5432/mydb',
+  },
 }));
 
-describe('Clerk Authentication Integration Tests', () => {
-  it('renders ClerkProvider when appropriate environment variables are set', async () => {
-    const { container } = render(<AuthProvider><div>Test Child</div></AuthProvider>);
+jest.mock('~/core/auth/authjs', () => ({
+  getServerSession: jest.fn(),
+  authOptions: {},
+}));
 
-    // We check that the children are wrapped within the mocked ClerkProvider which returns a div
-    expect(container.innerHTML).toContain('Test Child');
-    expect(container.querySelector('div')).not.toBeNull();
+describe('Clerk Integration', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
   });
 
-  // Additional tests can be written to verify behavior when environment variables are not set correctly
+  it('should return current user when NEXT_PUBLIC_AUTH_PROVIDER is clerk', async () => {
+    const mockUser = {
+      id: 'user_123',
+      emailAddresses: [{ id: 'email_123', emailAddress: 'test@example.com' }],
+      primaryEmailAddressId: 'email_123',
+      firstName: 'Test',
+      lastName: 'User',
+      imageUrl: 'https://example.com/image.png',
+    };
+    
+    (currentUser as jest.Mock).mockResolvedValue(mockUser);
+
+    const user = await getServerAuthSession();
+    
+    expect(currentUser).toHaveBeenCalled();
+    expect(user).toEqual(mockUser);
+  });
+
+  it('should throw an error if auth provider is invalid', async () => {
+    const env = require('~/env.mjs').env;
+    env.NEXT_PUBLIC_AUTH_PROVIDER = 'invalid_provider';
+    
+    await expect(getServerAuthSession()).rejects.toThrow('❌ [getServerAuthSession()] Allowed values for \'NEXT_PUBLIC_AUTH_PROVIDER\' are \'authjs\' and \'clerk\'');
+  });
 });
-
-
