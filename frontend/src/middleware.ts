@@ -27,7 +27,7 @@ import nextIntlMiddleware from "next-intl/middleware";
 
 import { env } from "~/env.mjs";
 import { defaultLocale, locales } from "~/navigation";
-import { checkIfPageRequestComesFromBot, getLocale } from "~/utils/auth/mw";
+import {getLocale } from "~/utils/auth/mw";
 
 const publicRoutes = ["/(.*)"];
 
@@ -89,11 +89,6 @@ export default async function middleware(
 ) {
   if (env.CHECK_BOT_ACTIVITY === "true") {
     const userAgent = request.headers.get("user-agent") || "";
-    const { isGeneralBot, isLighthouseBot, isSearchBot } =
-      checkIfPageRequestComesFromBot(userAgent);
-    if (isSearchBot || isGeneralBot || isLighthouseBot) {
-      console.log(`🤖 Bot detected: ${userAgent}`);
-    }
   }
   const locale = getLocale(request);
   const { nextUrl: geo } = request;

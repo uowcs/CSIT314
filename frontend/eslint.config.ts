@@ -1,25 +1,3 @@
-/**
- * Blefnk's ESLint Configuration for Relivator 1.2.0
- * =================================================
- *
- * Remember to run `>ESLint: Restart ESLint Server`
- * command after making changes and the file saving.
- * Tip: Open `>Keyboard Shortcuts` and bind restart.
- *
- * When using ESLint VSCode extension, make sure you
- * have `Use Flat Config` option enabled in settings.
- * Bonus tip: When using Relivator, use `pnpm appts`.
- *
- * Note: antfu already includes the following plugins:
- * typescript, stylistic, perfectionist, jsonc, react,
- * unicorn, unocss, vue, yaml, toml, jsdoc, markdown.
- * Go to `export default antfu` to see actual config.
- *
- * @see https://github.com/antfu/eslint-config#antfueslint-config
- * @see https://github.com/blefnk/relivator#readme <== get config updates
- * @see https://eslint.org/docs/latest/use/configure/configuration-files-new
- */
-
 import antfu from "@antfu/eslint-config";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslintJsPlugin from "@eslint/js";
@@ -600,21 +578,3 @@ export default antfu(
   },
 );
 
-/**
- * Resources and Inspirations
- * ==========================
- * @see https://typescript-eslint.io typescript
- * @see https://eslint.org/docs/latest/rules eslint
- * @see https://github.com/blefnk/relivator#readme relivator
- * @see https://github.com/import-js/eslint-plugin-import#rules import
- * @see https://github.com/antfu/eslint-ts-patch/#readme eslint-ts-patch
- * @see https://github.com/sindresorhus/eslint-plugin-unicorn#rules unicorn
- * @see https://github.com/ArnaudBarre/eslint-plugin-react-refresh react-refresh
- * @see https://github.com/art0rz/eslint-plugin-no-barrel-files#rules no-barrel-files
- * @see https://github.com/Anparasan3/core-js/blob/master/eslint.config.js inspirations
- * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules eslint-comments
- * @see https://github.com/Limegrass/eslint-plugin-import-alias#configuration import-alias
- * @see https://github.com/nirv-ai/tinkerbuntune/blob/develop/eslint.config.js inspirations
- * @see https://github.com/eslint-functional/eslint-plugin-functional#supported-rules functional
- * @see https://github.com/a-tarasyuk/eslint-plugin-redundant-undefined#usage redundant-undefined
- */

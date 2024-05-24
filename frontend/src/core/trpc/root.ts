@@ -4,13 +4,11 @@
  */
 
 import { productRouter } from "~/core/trpc/routers/product";
-import { todoRouter } from "~/core/trpc/routers/todo";
 import { createTRPCRouter, tn } from "~/core/trpc/trpc";
 
 // Export the inner and nested tRPC routers
 export const appRouter = createTRPCRouter({
   product: productRouter,
-  todo: todoRouter,
   books: tn.router({
     list: tn.procedure.query(() => [
       { id: "0", name: "Store 0", author: null },

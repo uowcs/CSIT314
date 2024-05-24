@@ -15,10 +15,19 @@ import {
 } from "~/islands/primitives/sheet";
 import { Link } from "~/navigation";
 import { getCartAction } from "~/server/actions/cart";
+import { getServerAuthSession, getUserById } from "~/utils/auth/users";
 
 export async function CartSheet() {
   // console.log("CartSheet's await getCartAction");
   const cartLineItems = await getCartAction();
+  const session = await getServerAuthSession();
+  let user = null;
+  let premiumStatus = false;
+
+  if(session != undefined){
+    user = await getUserById(session.id);
+    premiumStatus = user?.isPremium;
+  } 
 
   let itemCount = 0;
   let cartTotal = 0;
@@ -84,7 +93,10 @@ export async function CartSheet() {
         </SheetHeader>
         {itemCount > 0 ?
           <>
-            <CartLineItems items={cartLineItems} className="flex-1" />
+            <CartLineItems 
+            items={cartLineItems} 
+            isUserPremium={premiumStatus}
+            className="flex-1" />
             <div className="space-y-4 pr-6">
               <Separator />
               <div className="space-y-1.5 text-sm">
@@ -98,7 +110,14 @@ export async function CartSheet() {
                 </div>
                 <div className="flex">
                   <span className="flex-1">Total</span>
-                  <span>{formatPrice(cartTotal.toFixed(2))}</span>
+                  {premiumStatus? (
+                    <>
+                      <span className="line-through">{formatPrice(cartTotal)}</span>
+                      <span>&nbsp;&nbsp;{formatPrice((Number(cartTotal) * 0.9))}</span>
+                    </>
+                  ) : (
+                    <div>{formatPrice(cartTotal)}</div>
+                  )}
                 </div>
               </div>
 

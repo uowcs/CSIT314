@@ -44,6 +44,7 @@ interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	tAddToCart: string;
 	onSwitch?: () => Promise<void>;
 	userID: string;
+	isUserPremium: boolean;
 }
 
 export function ProductCard({
@@ -55,6 +56,7 @@ export function ProductCard({
 	product,
 	storeId,
 	userID,
+	isUserPremium,
 	...props
 }: ProductCardProps) {
 	const [isPending, startTransition] = React.useTransition();
@@ -75,7 +77,7 @@ export function ProductCard({
 
 	// console.log("(x) storeId:", storeId, typeof storeId);
 	// console.log("(x) product.storeId:", product.storeId, typeof product.storeId);
-
+	// console.log("isUserPremium", isUserPremium);
 	return (
 		<Card className={cn("h-full overflow-hidden", className)} {...props}>
 			<Link
@@ -118,7 +120,11 @@ export function ProductCard({
 				<CardContent className="grid gap-2.5 p-4">
 					<CardTitle className="line-clamp-1">{product.name}</CardTitle>
 					<CardDescription className="line-clamp-10">
-						<div>{formatPrice(product.price)}</div>
+						{isUserPremium ? (
+							<><div style={{ textDecoration: 'line-through' }}>{formatPrice(product.price)}</div><div>{formatPrice(Number(product.price) * 0.9)}</div></>
+						) : (
+							<div>{formatPrice(product.price)}</div>
+						)}
 						<div style={{ display: "flex", alignItems: "center" }}>
 							{/* {product.rating} */}
 							4.5
@@ -168,8 +174,8 @@ export function ProductCard({
 									error instanceof Error
 										? toast.error(error.message)
 										: toast.error(
-												"Something went wrong, please try again later.",
-											);
+											"Something went wrong, please try again later.",
+										);
 								}
 							});
 						}}
