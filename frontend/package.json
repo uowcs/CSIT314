@@ -1,11 +1,11 @@
 {
-  "name": "relivator",
-  "version": "1.2.5",
+  "name": "NomNomNow",
+  "version": "1.0",
   "private": true,
   "author": {
-    "name": "Nazarii Korniienko",
-    "email": "blefnk@gmail.com",
-    "url": "https://github.com/blefnk/relivator"
+    "name": "CSIT314",
+    "email": "mail@harsha.link",
+    "url": "https://github.com/uowcs/csit314"
   },
   "scripts": {
     "appts": "run-s test format typecheck build",
@@ -30,7 +30,6 @@
     "format:check": "prettier --check \"**/*.{js,ts,tsx,md,mdx,json}\" --cache --experimental-ternaries",
     "format:old": "run-s format:write format:check",
     "format:write": "prettier --write \"**/*.{js,ts,tsx,md,mdx,json}\" --cache --experimental-ternaries",
-    "preinstall": "run-s pnpm:only reli:config",
     "latest": "pnpm update --latest && pnpm up-trpc:next && pnpm add storybook@next @storybook/nextjs@next",
     "lint": "eslint-ts . && pnpm stylelint src/**/*.css",
     "lint:fix": "eslint-ts . --fix && pnpm stylelint --fix src/**/*.css",
