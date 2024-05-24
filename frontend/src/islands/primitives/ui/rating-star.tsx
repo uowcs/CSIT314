@@ -25,28 +25,31 @@ export default function Rating({ productId }) {
       });
       redirect(`/dashboard/purchases`);
     } catch (error) {
-      console.error("Failed to insert review:", error);
+      redirect(`/dashboard/purchases`);
     }
   }
 
   return (
     <>
-      {/* styles omitted for brevity */}
-      <form action={postReview}>
-        <div className="grid w-full gap-2">
-          <Textarea id="review" name="review" placeholder="Type your message here." />
-          <label htmlFor="rating" className="mb-2">Rating:</label>
-          <input type="range" id="rating" name="rating" min="1" max="5" />
-          <div className="flex justify-between w-full px-2 mt-1">
-            <span>1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
+
+        <form method="POST" action={postReview}>
+          <div className="grid w-full gap-2">
+            <Textarea id="review" name="review" placeholder="Type your message here." />
+            <label htmlFor="rating" className="mb-2">Rating:</label>
+            <input type="range" id="rating" name="rating" min="1" max="5" />
+            <div className="flex justify-between w-full px-2 mt-1">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+            </div>
           </div>
-        </div>
-        <Button type="submit">Send Review</Button>
-      </form>
+          <Button type="submit">Send Review</Button>
+        </form>
+
     </>
   );
 }
+
+

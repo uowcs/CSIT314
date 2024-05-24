@@ -110,8 +110,9 @@ const listOfPurchasedProducts = await db
   .groupBy(products.id, stores.name) // Include stores.name in groupBy if it affects the aggregation
   .orderBy(desc(sql`MAX(${stores.stripeAccountId})`), desc(products.createdAt));
 
-export default async function PurchasesPage() {
+export default async function PurchasesPage(status) {
   const session = await getServerAuthSession();
+
   if (!session) redirect("/auth");
 
   // async function getStoreName(storeId: string): Promise<string> {
@@ -122,18 +123,35 @@ export default async function PurchasesPage() {
   //   return store[0].name;
   // }
 
+
+
   return (
     <Shell variant="sidebar">
       <PageHeader
         id="dashboard-purchases-header"
         aria-labelledby="dashboard-purchases-header-heading"
       >
+        {/* <div>
+      {status === 'submitted' && (
+       <div role="alert" className="alert alert-success">
+       <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+       <span>Submitted!</span>
+     </div>
+      )}
+      {status === 'not-submitted' && (
+        <div className="notification error">
+          Failed to submit review.
+        </div>
+      )}
+      
+    </div> */}
         <PageHeaderHeading size="sm">Purchases</PageHeaderHeading>
       </PageHeader>
       <Tabs defaultValue="all">
         <TabsContent value="all">
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
+           
               <CardTitle>Purchases made so far !</CardTitle>
               <CardDescription>View and manage your purchases.</CardDescription>
             </CardHeader>
@@ -172,7 +190,7 @@ export default async function PurchasesPage() {
                         ))}
                       </TableCell>
                       <TableCell className="font-medium">
-                        {product.name}
+                       <Link href={"/product/"+product.id}>{product.name}</Link> 
                       </TableCell>
                       <TableCell className="font-medium">
                         {/* {getStoreName(product.storeId)} */}
@@ -225,3 +243,4 @@ export default async function PurchasesPage() {
     </Shell>
   );
 }
+
