@@ -181,7 +181,7 @@ export default async function PurchasesPage() {
                       <TableCell>
                         <Badge variant="outline">{product.category}</Badge>
                       </TableCell>
-                      <TableCell>${product.price}</TableCell>
+                      <TableCell>${Number(parseFloat(product.price).toPrecision(2)) + Number("15")}</TableCell>
                       <TableCell>
                         {" "}
                         <AlertDialog>
@@ -208,24 +208,7 @@ export default async function PurchasesPage() {
                       {/* <TableCell className="hidden md:table-cell">
                         {new Date(product.createdAt).toLocaleString()}
                       </TableCell> */}
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>
