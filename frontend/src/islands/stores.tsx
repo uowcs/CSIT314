@@ -174,7 +174,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
       </div>
       <div className="flex flex-col gap-4 py-4">
         <PageHeaderHeading size="sm">
-       All Restraunts
+       All Stores
         </PageHeaderHeading>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
