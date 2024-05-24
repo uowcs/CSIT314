@@ -79,3 +79,26 @@
     @apply rounded-lg lg:rounded-2xl;
   }
 }
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 2s linear infinite;
+  /* background: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.7), transparent); */
+}
+@keyframes pulse-move {
+  0% { background-position: -100% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.pulse-move {
+  animation: pulse-move 3s linear infinite;
+  background: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.7), transparent);
+  background-size: 300% 100%;
+}

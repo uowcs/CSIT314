@@ -223,7 +223,7 @@ export function Combobox({
           
           
           <CommandSeparator />
-          {navItems.sidebarNav.map((group) => (
+          {/* {navItems.sidebarNav.map((group) => (
             <CommandGroup key={group.title} heading={group.id}>
               {group.items.map((item) => (
                 <CommandItem
@@ -240,7 +240,7 @@ export function Combobox({
                 </CommandItem>
               ))}
             </CommandGroup>
-          ))}
+          ))} */}
           
           {/* <CommandSeparator />
           <CommandGroup heading="Links">

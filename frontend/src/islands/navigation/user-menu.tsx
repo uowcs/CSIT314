@@ -79,9 +79,9 @@ export default async function UserMenu() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/dashboard/admin" className="flex items-center">
-                <Icons.terminal className="mr-2 h-4 w-4" aria-hidden="true" />
-                Admin Page
+              <Link href="/dashboard/order-status" className="flex items-center">
+                <Icons.spinner className="mr-2 h-4 w-4" aria-hidden="true" />
+                Order Status
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>

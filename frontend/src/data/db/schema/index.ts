@@ -1,57 +1,9 @@
-/**
- * Unified Schema Exporter for Multiple Databases
- * ==============================================
- *
- * Supports both MySQL and PostgreSQL, enabling consistent table imports across the app.
- * Uses environment variables for schema selection, compatible with PlanetScale, Neon, Vercel,
- * and Railway providers. Aims to maintain schema consistency and minimize table mismatches.
- *
- * Includes instructions, resources, inspirations at the end of file.
- * Check {dialect}.ts files to see the detailed database structures.
- */
 
-import * as schemaMysql from "~/data/db/schema/mysql";
 import * as schemaPgsql from "~/data/db/schema/pgsql";
 import { env } from "~/env.mjs";
-
-// Configure this based on the database provider.
-// Feel free to add/remove/edit things if needed.
 const selectedSchema = (() => {
-  let dbProvider = env.NEXT_PUBLIC_DB_PROVIDER || "";
-
-  if (!dbProvider) {
-    dbProvider = "planetscale";
-    console.error(
-      "❌ NEXT_PUBLIC_DB_PROVIDER is not set (refer to .env.example)",
-    );
-
-    // Set default DB provider based on DATABASE_URL
-    // if NEXT_PUBLIC_DB_PROVIDER is not specified
-    // todo: Find another way, because DATABASE_URL
-    // todo: can't be accessed on the client-side.
-    // const databaseUrl = env.DATABASE_URL;
-    // if (databaseUrl?.startsWith("mysql://")) {
-    //   dbProvider = "planetscale";
-    // } else if (databaseUrl?.startsWith("postgres://")) {
-    //   dbProvider = "neon";
-    // }
-  }
-
-  // Assign schema based on the dbProvider
-  if (dbProvider === "planetscale") {
-    return schemaMysql;
-  } else if (["railway", "vercel", "neon"].includes(dbProvider)) {
-    return schemaPgsql;
-  } else {
-    console.error("❌ selectedSchema(): Unknown NEXT_PUBLIC_DB_PROVIDER");
-    return schemaMysql;
-  }
+  return schemaPgsql;
 })();
-
-// =======================================================
-// Export tables based on the selected schema
-// =======================================================
-
 export const {
   accounts,
   addresses,
@@ -65,13 +17,9 @@ export const {
   stripeEvent,
   todos,
   users,
+  reviews,
   verificationTokens,
 } = selectedSchema;
-
-// =======================================================
-// Export types based on the selected schema
-// =======================================================
-
 export type Address = typeof selectedSchema.addresses.$inferSelect;
 export type Cart = typeof selectedSchema.carts.$inferSelect;
 export type EmailPreference = typeof selectedSchema.emails.$inferSelect;
@@ -81,6 +29,7 @@ export type Product = typeof selectedSchema.products.$inferSelect;
 export type Store = typeof selectedSchema.stores.$inferSelect;
 export type Todo = typeof selectedSchema.todos.$inferSelect;
 export type User = typeof selectedSchema.users.$inferSelect;
+export type Reviews = typeof selectedSchema.reviews.$inferSelect;
 
 export type NewAddress = typeof selectedSchema.addresses.$inferInsert;
 export type NewCart = typeof selectedSchema.carts.$inferInsert;

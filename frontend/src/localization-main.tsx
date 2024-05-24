@@ -105,7 +105,6 @@ export default function LocalizationMainSwitcher({
   );
 }
 
-/** @see https://github.com/blefnk/relivator/pull/3/commits */
 
 interface LocaleFlagIconProps {
   locale: string;

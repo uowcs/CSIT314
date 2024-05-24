@@ -31,20 +31,6 @@ import Negotiator from "negotiator";
 // }
 import { defaultLocale, locales } from "~/navigation";
 
-export function checkIfPageRequestComesFromBot(userAgent: string) {
-  // Check for common search bots
-  const isSearchBot =
-    /Googlebot|Bingbot|Slurp|DuckDuckBot|YandexBot|Baiduspider/i.test(
-      userAgent,
-    );
-  // Check for general bots
-  const isGeneralBot = userAgent.includes("bot") || userAgent.includes("crawl");
-  // Check for Google PageSpeed Insight or similar tools
-  const isLighthouseBot =
-    /pagespeed|lighthouse|speed insights|chrome-lighthouse/i.test(userAgent);
-  // Return the results
-  return { isSearchBot, isGeneralBot, isLighthouseBot };
-}
 
 export function getLocale(req: NextRequest): string | undefined {
   const negotiatorHeaders: Record<string, string> = {};
@@ -101,25 +87,6 @@ export const getFinalUrl = (target: string, { req }: { req: NextRequest }) => {
   return finalUrl;
 };
 
-export const detectBot = (req: NextRequest) => {
-  const url = req.nextUrl;
-  if (url.searchParams.get("bot")) return true;
-  const ua = req.headers.get("User-Agent");
-  if (ua) {
-    /**
-     * Note:
-     * - bot is for most bots & crawlers
-     * - ChatGPT is for ChatGPT crawling
-     * - WhatsApp is for WhatsApp crawler
-     * - facebookexternalhit is for Facebook
-     * - MetaInspector is for https://metatags.io
-     */
-    return /bot|chatgpt|facebookexternalhit|WhatsApp|google|baidu|bing|msn|DuckDuckBot|YandexBot|teoma|slurp|MetaInspector/i.test(
-      ua,
-    );
-  }
-  return false;
-};
 
 // check if a link can be displayed in an iframe
 export const isIframeable = async ({
@@ -131,7 +98,7 @@ export const isIframeable = async ({
 }) => {
   const res = await fetch(url, {
     headers: {
-      "User-Agent": "relivator-bot/1.0",
+      "User-Agent": "",
     },
   });
 

@@ -253,6 +253,8 @@ export function formatPrice(
     style: "currency",
     currency,
     notation,
+    minimumFractionDigits: 2, // Ensures that at least two decimal places are shown
+    maximumFractionDigits: 2  // Ensures that no more than two decimal places are shown
   }).format(Number(price));
 }
 

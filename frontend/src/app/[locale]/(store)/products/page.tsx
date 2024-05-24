@@ -18,7 +18,7 @@ import { Products } from "~/islands/products";
 import { Shell } from "~/islands/wrappers/shell-variants";
 import { getProductsAction } from "~/server/actions/product";
 import { getStoresAction } from "~/server/actions/store";
-import { getServerAuthSession } from "~/utils/auth/users";
+import { getServerAuthSession, getUserById } from "~/utils/auth/users";
 
 export const metadata: Metadata = {
   metadataBase: fullURL(),
@@ -97,7 +97,6 @@ export default async function ProductsPage({
 
   const storePageCount = Math.ceil(storesTransaction.count / storesLimit);
 
-  const session = await getServerAuthSession();
 
   let isCustomStore = false;
   let store = null;
@@ -107,6 +106,14 @@ export default async function ProductsPage({
     if (!store) {
       return notFound();
     }
+  }
+
+  const session = await getServerAuthSession();
+  let user = null;
+  let premiumStatus = false;
+  if(session != undefined){
+    user = await getUserById(session.id);
+    premiumStatus = user?.isPremium;
   }
 
   return (
@@ -119,7 +126,6 @@ export default async function ProductsPage({
           {t("store.product.buyProductsFromOurStores")}
         </PageHeaderDescription>
       </PageHeader>
-      ``
       <Products
         products={productsTransaction.items}
         pageCount={pageCount}
@@ -128,6 +134,7 @@ export default async function ProductsPage({
         storePageCount={storePageCount}
         session={session?.id ?? null}
         tAddToCart={t("store.product.addToCart")}
+        isUserPremium={premiumStatus}
       />
     </Shell>
   );

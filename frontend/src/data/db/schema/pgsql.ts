@@ -36,23 +36,24 @@ export const pgTable = pgTableCreator((name) => `acme_${name}`);
 
 // @see src/app/[locale]/(auth)/auth/page.tsx
 export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name"),
-  // addresses: json("addresses").$type<string[] | null>().default(null),
-  address: text("address"),
-  email: text("email"),
-  emailClerk: text("emailClerk"),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  role: roleEnum("role").notNull().default("user"),
-  mode: modeEnum("mode").notNull().default("buyer"),
-  stripeCustomerId: text("stripeCustomerId"),
-  stripePriceId: text("stripePriceId"),
-  currentCartId: text("currentCartId"),
-  stripeCurrentPeriodEnd: text("stripeCurrentPeriodEnd"),
-  stripeSubscriptionId: text("stripeSubscriptionId"),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow(),
+	id: text("id").notNull().primaryKey(),
+	name: text("name"),
+	// addresses: json("addresses").$type<string[] | null>().default(null),
+	address: text("address"),
+	email: text("email"),
+	emailClerk: text("emailClerk"),
+	emailVerified: timestamp("emailVerified", { mode: "date" }),
+	image: text("image"),
+	role: roleEnum("role").notNull().default("user"),
+	mode: modeEnum("mode").notNull().default("buyer"),
+	stripeCustomerId: text("stripeCustomerId"),
+	stripePriceId: text("stripePriceId"),
+	currentCartId: text("currentCartId"),
+	stripeCurrentPeriodEnd: text("stripeCurrentPeriodEnd"),
+	stripeSubscriptionId: text("stripeSubscriptionId"),
+	createdAt: timestamp("createdAt").defaultNow(),
+	updatedAt: timestamp("updatedAt").defaultNow(),
+	isPremium: boolean("isPremium").notNull().default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -179,14 +180,16 @@ export const products = pgTable("products", {
   tags: json("tags").$type<string[] | null>().default(null),
   createdAt: timestamp("createdAt").defaultNow(),
 });
+
 export const reviews = pgTable("reviews", {
-  id: serial("id").primaryKey(),
-  userId: text("userId").notNull(),
-  productId: integer("productId").notNull(),
-  rating: integer("rating").notNull(),
-  comment: text("comment"),
-  createdAt: timestamp("createdAt").defaultNow(),
+	id: serial("id").primaryKey(),
+	userId: text("userId").notNull(),
+	productId: integer("productId").notNull(),
+	rating: integer("rating").notNull(),
+	comment: text("comment"),
+	createdAt: timestamp("createdAt").defaultNow(),
 });
+
 export const productsRelations = relations(products, ({ one }) => ({
   store: one(stores, { fields: [products.storeId], references: [stores.id] }),
   user: one(users, { fields: [products.storeId], references: [users.id] }),

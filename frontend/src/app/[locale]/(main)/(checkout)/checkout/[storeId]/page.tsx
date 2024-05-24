@@ -26,6 +26,7 @@ import { ScrollArea } from "~/islands/primitives/scroll-area";
 import { Shell } from "~/islands/wrappers/shell-variants";
 import { Link } from "~/navigation";
 import { getCartAction } from "~/server/actions/cart";
+import { getServerAuthSession, getUserById } from "~/utils/auth/users";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
@@ -41,6 +42,13 @@ interface CheckoutPageProperties {
 
 export default async function CheckoutPage({ params }: CheckoutPageProperties) {
   const t = await getTranslations();
+  const session = await getServerAuthSession();
+  let user = null;
+  let premiumStatus = false;
+  if(session != undefined){
+    user = await getUserById(session.id);
+    premiumStatus = user?.isPremium;
+  }
 
   const appName = siteConfig.name;
 
@@ -174,11 +182,21 @@ export default async function CheckoutPage({ params }: CheckoutPageProperties) {
                   items={cartLineItems}
                   variant="minimal"
                   isEditable={false}
+                  isUserPremium={premiumStatus}
                   className="container max-w-6xl"
                 />
                 <div className="container flex max-w-6xl pr-6 font-medium">
                   <TotalQuantity />
-                  <div>{formatPrice(total)}</div>
+                  <div>
+                    {premiumStatus? (
+                      <>
+                        <span className="line-through">{formatPrice(total)}</span>
+                        <span>&nbsp;&nbsp;{formatPrice((Number(total) * 0.9))}</span>
+                      </>
+                    ) : (
+                      <div>{formatPrice(total)}</div>
+                    )}
+                  </div>
                 </div>
               </DrawerContent>
             </Drawer>
@@ -191,11 +209,21 @@ export default async function CheckoutPage({ params }: CheckoutPageProperties) {
           <div className="line-clamp-1 font-semibold text-muted-foreground">
             {t("checkout.Pay")} {store.name}
           </div>
-          <div className="text-3xl font-bold">{formatPrice(total)}</div>
+          <div className="text-3xl font-bold">
+            {premiumStatus? (
+              <>
+                <span className="line-through">{formatPrice(total)}</span>
+                <span>&nbsp;&nbsp;{formatPrice((Number(total) * 0.9))}</span>
+              </>
+            ) : (
+              <div>{formatPrice(total)}</div>
+            )}  
+          </div>
         </div>
         <CartLineItems
           items={cartLineItems}
           isEditable={false}
+          isUserPremium={premiumStatus}
           className="container hidden w-full max-w-xl lg:ml-auto lg:mr-0 lg:flex lg:max-h-[580px] lg:pr-[4.5rem]"
         />
       </div>

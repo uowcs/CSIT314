@@ -18,7 +18,6 @@ import type { Provider } from "next-auth/providers/index";
 import { getLocale } from "next-intl/server";
 
 import { db } from "~/data/db";
-import { mysqlTable } from "~/data/db/schema/mysql";
 import { pgTable } from "~/data/db/schema/pgsql";
 import { env } from "~/env.mjs";
 

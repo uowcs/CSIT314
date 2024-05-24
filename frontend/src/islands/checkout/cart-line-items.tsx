@@ -14,6 +14,7 @@ interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   isScrollable?: boolean;
   isEditable?: boolean;
   variant?: "default" | "minimal";
+  isUserPremium?: boolean;
 }
 
 export function CartLineItems({
@@ -22,6 +23,7 @@ export function CartLineItems({
   isEditable = true,
   variant = "default",
   className,
+  isUserPremium,
   ...props
 }: CartLineItemsProps) {
   const Wrapper = isScrollable ? ScrollArea : Slot;
@@ -73,10 +75,18 @@ export function CartLineItems({
                     {item.name}
                   </span>
                   {isEditable ?
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
-                      {formatPrice(item.price)} x {item.quantity} ={" "}
-                      {formatPrice(
+                    <span className="grid line-clamp-1 text-xs text-muted-foreground">
+                      {/* {formatPrice(item.price)} x {item.quantity} ={" "} */}
+                      {/* {formatPrice(
                         (Number(item.price) * Number(item.quantity)).toFixed(2),
+                      )} */}
+                      {isUserPremium ? (
+                        <>
+                          <span className="line-through">{formatPrice(item.price)} x {item.quantity} = {formatPrice(Number(item.price) * item.quantity)} </span>
+                          <span>{formatPrice((Number(item.price) * 0.9))} x {item.quantity} = {formatPrice((Number(item.price) * 0.9) * item.quantity)}</span>
+                        </>
+                      ) : (
+                        <div>{formatPrice(item.price)} x {item.quantity} =  </div>
                       )}
                     </span>
                   : <span className="line-clamp-1 text-xs text-muted-foreground">
@@ -94,14 +104,21 @@ export function CartLineItems({
               </div>
               {isEditable ?
                 <UpdateCart cartLineItem={item} />
-              : <div className="flex flex-col space-y-1 font-medium">
+              : 
+                <div className="flex flex-col space-y-1 font-medium">
                   <span className="ml-auto line-clamp-1 text-sm">
                     {formatPrice(
-                      (Number(item.price) * item.quantity).toFixed(2),
+                      (Number(item.price) * item.quantity * (isUserPremium ? 0.9 : 1)).toFixed(2),
                     )}
                   </span>
                   <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {formatPrice(item.price)} each
+                    {isUserPremium ? 
+                      <>
+                        <s>{formatPrice(item.price)}</s> {formatPrice(Number(item.price) * 0.9)} each
+                      </>
+                    : 
+                      `${formatPrice(item.price)} each`
+                    }
                   </span>
                 </div>
               }
