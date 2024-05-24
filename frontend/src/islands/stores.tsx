@@ -73,6 +73,12 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
     });
   }, [filterValues]);
 
+  const top10Store = stores.filter(s => s.id >= 1 && s.id <= 10);
+  const recomendedStore = stores.filter(s => s.id >= 10 && s.id <= 50);
+
+
+
+
   return (
     <section className="flex flex-col space-y-6" {...props}>
       <div className="flex items-center space-x-2">
@@ -141,8 +147,8 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
         Stores close to your area
         </PageHeaderHeading>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-
-        {stores.map((store) => (
+        
+        {top10Store.map((store) => (
           <StoreCard
             key={store.id}
             href={`/products?store_ids=${store.id}`}
@@ -157,7 +163,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
         </PageHeaderHeading>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-        {stores.map((store) => (
+        {recomendedStore.map((store) => (
           <StoreCard
             key={store.id}
             href={`/products?store_ids=${store.id}`}
@@ -168,7 +174,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
       </div>
       <div className="flex flex-col gap-4 py-4">
         <PageHeaderHeading size="sm">
-        Taste the Asian Cusines !
+       All Restraunts
         </PageHeaderHeading>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
