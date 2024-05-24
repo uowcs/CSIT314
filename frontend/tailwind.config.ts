@@ -96,5 +96,6 @@ export default withUt({
     flowbitePlugin,
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
+    require('daisyui'),
   ],
 }) satisfies Config;
