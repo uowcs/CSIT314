@@ -29,13 +29,14 @@ const customJestConfig = {
     "<rootDir>/src/**/*.{js,jsx,ts,tsx}", 
     "!<rootDir>/src/**/*.d.ts"  // Avoid including TypeScript declaration files in coverage reports
   ],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',  // Use babel-jest for all JS and TS files
-  },
+  transform: { "^.+\\.tsx?$": ["ts-jest", { tsconfig: "./tsconfig.json" }] },
+  // transform: {
+  //   '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',  // Use babel-jest for all JS and TS files
+  // },
   
-  transformIgnorePatterns: [
-    "node_modules/(?!(module-that-needs-transpiling|@t3-oss))"  // Explicitly include the troublesome module
-  ],
+  // transformIgnorePatterns: [
+  //   "node_modules/(?!(module-that-needs-transpiling|@t3-oss))"  // Explicitly include the troublesome module
+  // ],
   
 };
 
