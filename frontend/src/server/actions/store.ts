@@ -13,7 +13,7 @@ import { getStoresSchema, storeSchema } from "~/data/validations/store";
 export async function filterStoresAction(query: string) {
   if (query.length === 0) return null;
 
-  // Fetch filtered stores based on the query
+
   const filteredStores = await db
     .select({
       id: stores.id,
@@ -23,7 +23,7 @@ export async function filterStoresAction(query: string) {
     .limit(10);
 
   // Log the fetched data for debugging
-  console.log("Filtered Stores:", filteredStores);
+
 
   // Group stores by name
   const storeMap = new Map();
