@@ -29,6 +29,7 @@ const localeMessages = {
   "tr-tr": tr_tr,
   "uk-ua": uk_ua,
   "zh-cn": zh_cn,
+  defaultLocale: "en-us",
 };
 
 // Exporting default function that asynchronously receives
