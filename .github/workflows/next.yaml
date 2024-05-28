@@ -25,17 +25,23 @@ jobs:
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          cache: 'pnpm'
 
-      - name: Setup and install dependencies
-        working-directory: ./frontend
-        run: |
-          npm install
-          npm run lint
+      # - name: Use Node.js 16
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '16'
+      #     cache: 'pnpm'
+      # 
+      # - name: Install pnpm
+      #   run: |
+      #     npm install -g pnpm
+      #     echo "$(npm bin -g)" >> $GITHUB_PATH
+
+      # - name: Setup and install dependencies
+      #   working-directory: ./frontend
+      #   run: |
+      #     pnpm install
+      #     pnpm run lint
 
       - name: Snyk Vulnerability Scan
         uses: snyk/actions/node@master
