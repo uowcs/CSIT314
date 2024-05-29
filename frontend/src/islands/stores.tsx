@@ -52,12 +52,12 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams]
   );
 
   // Store status filter
   const [filterValues, setFilterValues] = React.useState<string[]>(
-    statuses?.split(".") ?? [],
+    statuses?.split(".") ?? []
   );
 
   React.useEffect(() => {
@@ -68,7 +68,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
         })}`,
         {
           scroll: false,
-        },
+        }
       );
     });
   }, [filterValues]);
@@ -98,7 +98,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
                       })}`,
                       {
                         scroll: false,
-                      },
+                      }
                     );
                   });
                 }}
@@ -128,61 +128,56 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
           )}
         </div>
       </div>
-      {!isPending && !stores.length ?
+      {!isPending && !stores.length ? (
         <div className="mx-auto flex max-w-xs flex-col space-y-1.5">
           <h1 className="text-center text-2xl font-bold">No stores found</h1>
           <p className="text-center text-muted-foreground">
             Try changing your filters, or check back later for new stores
           </p>
         </div>
-      : null}
+      ) : null}
       <div className="flex flex-col gap-4 py-4">
-        <PageHeaderHeading size="sm">
-        Stores Close To You 
-        </PageHeaderHeading>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-
-        {stores.map((store) => (
-          <StoreCard
-            key={store.id}
-            href={`/products?store_ids=${store.id}`}
-            store={store}
-          />
-        ))}
-      </div>
+        <PageHeaderHeading size="sm">Stores Close To You</PageHeaderHeading>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {stores.map((store) => (
+            <StoreCard
+              key={store.id}
+              href={`/products?store_ids=${store.id}`}
+              store={store}
+            />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col gap-4 py-4">
         <PageHeaderHeading size="sm">
           Top Recomendation For You !
         </PageHeaderHeading>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-
-        {stores.map((store) => (
-          <StoreCard
-            key={store.id}
-            href={`/products?store_ids=${store.id}`}
-            store={store}
-          />
-        ))}
-      </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {stores.map((store) => (
+            <StoreCard
+              key={store.id}
+              href={`/products?store_ids=${store.id}`}
+              store={store}
+            />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col gap-4 py-4">
         <PageHeaderHeading size="sm">
-        Taste The Asian Cusines !
+          Taste The Asian Cusines !
         </PageHeaderHeading>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-
-        {stores.map((store) => (
-          <StoreCard
-            key={store.id}
-            href={`/products?store_ids=${store.id}`}
-            store={store}
-          />
-        ))}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {stores.map((store) => (
+            <StoreCard
+              key={store.id}
+              href={`/products?store_ids=${store.id}`}
+              store={store}
+            />
+          ))}
+        </div>
       </div>
-      </div>
 
-      {stores.length ?
+      {stores.length ? (
         <PaginationButton
           pageCount={pageCount}
           page={page}
@@ -194,7 +189,7 @@ export function Stores({ stores, pageCount, ...props }: StoresProps) {
           isPending={isPending}
           startTransition={startTransition}
         />
-      : null}
+      ) : null}
     </section>
   );
 }
