@@ -364,7 +364,7 @@ dependencies:
     version: 4.3.1
   drizzle-orm:
     specifier: ^0.29.5
-    version: 0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0)
+    version: 0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.8)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0)
   drizzle-zod:
     specifier: ^0.5.1
     version: 0.5.1(drizzle-orm@0.29.5)(zod@3.22.4)
@@ -827,8 +827,8 @@ devDependencies:
     specifier: ^0.10.2
     version: 0.10.2
   mysql2:
-    specifier: ^3.9.7
-    version: 3.9.7
+    specifier: ^3.9.8
+    version: 3.9.8
   next-secure-headers:
     specifier: ^2.2.0
     version: 2.2.0
@@ -4740,7 +4740,7 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
       '@npmcli/promise-spawn': 7.0.1
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       npm-pick-manifest: 9.0.0
       proc-log: 3.0.0
       promise-inflight: 1.0.1
@@ -4959,7 +4959,7 @@ packages:
       '@zkochan/retry': 0.2.0
       encode-registry: 3.0.1
       load-json-file: 6.2.0
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       normalize-path: 3.0.0
       p-limit: 3.1.0
       p-memoize: 4.0.1
@@ -13484,7 +13484,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0):
+  /drizzle-orm@0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.8)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0):
     resolution: {integrity: sha512-jS3+uyzTz4P0Y2CICx8FmRQ1eplURPaIMWDn/yq6k4ShRFj9V7vlJk67lSf2kyYPzQ60GkkNGXcJcwrxZ6QCRw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -13559,7 +13559,7 @@ packages:
       '@planetscale/database': 1.16.0
       '@types/pg': 8.11.4
       '@types/react': 18.2.60
-      mysql2: 3.9.7
+      mysql2: 3.9.8
       pg: 8.11.3
       postgres: 3.4.4
       react: 18.2.0
@@ -13571,7 +13571,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0)
+      drizzle-orm: 0.29.5(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.4)(@types/react@18.2.60)(mysql2@3.9.8)(pg@8.11.3)(postgres@3.4.4)(react@18.2.0)
       zod: 3.22.4
     dev: false
 
@@ -17025,7 +17025,7 @@ packages:
     resolution: {integrity: sha512-+K84LB1DYwMHoHSgaOY/Jfhw3ucPmSET5v98Ke/HdNSw4a0UktWzyW1mjhjpuxxTqOOsfWT/7iVshHmVZ4IpOA==}
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
     dev: true
 
   /html-dom-parser@5.0.8:
@@ -19375,14 +19375,9 @@ packages:
     resolution: {integrity: sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==}
     engines: {node: '>=8'}
 
-  /lru-cache@10.2.0:
-    resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
-    engines: {node: 14 || >=16.14}
-
   /lru-cache@10.2.2:
     resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
     engines: {node: 14 || >=16.14}
-    dev: false
 
   /lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
@@ -20867,8 +20862,8 @@ packages:
     resolution: {integrity: sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  /mysql2@3.9.7:
-    resolution: {integrity: sha512-KnJT8vYRcNAZv73uf9zpXqNbvBG7DJrs+1nACsjZP1HMJ1TgXEy8wnNilXAn/5i57JizXKtrUtwDB7HxT9DDpw==}
+  /mysql2@3.9.8:
+    resolution: {integrity: sha512-+5JKNjPuks1FNMoy9TYpl77f+5frbTklz7eb3XDwbpsERRLEeXiW2PDEkakYF50UuKU2qwfGnyXpKYvukv8mGA==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
@@ -21917,7 +21912,7 @@ packages:
     resolution: {integrity: sha512-7xTavNy5RQXnsjANvVvMkEjvloOinkAjv/Z6Ildz9v2RinZ4SBKTWFOVRbaF8p0vpHnyjV/UwNDdKuUv6M5qcA==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       minipass: 7.0.4
 
   /path-scurry@1.11.0:
