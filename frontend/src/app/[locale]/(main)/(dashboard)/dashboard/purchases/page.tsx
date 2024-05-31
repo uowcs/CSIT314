@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { desc, eq, sql } from "drizzle-orm";
 import { Home, Package2, PanelLeft, Search, Users2 } from "lucide-react";
 
+// src/islands/primitives/ui
+import Rating from '../../../../../../../src/islands/primitives/ui/rating-star'
+
 import { db } from "~/data/db";
 import { products, stores, type Product, type Store } from "~/data/db/schema";
 import { fullURL } from "~/data/meta/builder";
@@ -13,6 +16,18 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "~/islands/navigation/page-header";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/islands/primitives/ui/alert-dialog";
+import { Textarea } from "~/islands/primitives/ui/textarea";
 import { Badge } from "~/islands/primitives/ui/badge";
 import {
   Breadcrumb,
@@ -74,6 +89,8 @@ export const metadata: Metadata = {
   description: "Manage your purchases",
 };
 
+
+
 const listOfPurchasedProducts = await db
   .select({
     id: products.id,
@@ -93,8 +110,9 @@ const listOfPurchasedProducts = await db
   .groupBy(products.id, stores.name) // Include stores.name in groupBy if it affects the aggregation
   .orderBy(desc(sql`MAX(${stores.stripeAccountId})`), desc(products.createdAt));
 
-export default async function PurchasesPage() {
+export default async function PurchasesPage(status) {
   const session = await getServerAuthSession();
+
   if (!session) redirect("/auth");
 
   // async function getStoreName(storeId: string): Promise<string> {
@@ -105,18 +123,35 @@ export default async function PurchasesPage() {
   //   return store[0].name;
   // }
 
+
+
   return (
     <Shell variant="sidebar">
       <PageHeader
         id="dashboard-purchases-header"
         aria-labelledby="dashboard-purchases-header-heading"
       >
+        {/* <div>
+      {status === 'submitted' && (
+       <div role="alert" className="alert alert-success">
+       <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+       <span>Submitted!</span>
+     </div>
+      )}
+      {status === 'not-submitted' && (
+        <div className="notification error">
+          Failed to submit review.
+        </div>
+      )}
+      
+    </div> */}
         <PageHeaderHeading size="sm">Purchases</PageHeaderHeading>
       </PageHeader>
       <Tabs defaultValue="all">
         <TabsContent value="all">
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
+           
               <CardTitle>Purchases made so far !</CardTitle>
               <CardDescription>View and manage your purchases.</CardDescription>
             </CardHeader>
@@ -155,7 +190,7 @@ export default async function PurchasesPage() {
                         ))}
                       </TableCell>
                       <TableCell className="font-medium">
-                        {product.name}
+                       <Link href={"/product/"+product.id}>{product.name}</Link> 
                       </TableCell>
                       <TableCell className="font-medium">
                         {/* {getStoreName(product.storeId)} */}
@@ -164,28 +199,34 @@ export default async function PurchasesPage() {
                       <TableCell>
                         <Badge variant="outline">{product.category}</Badge>
                       </TableCell>
-                      <TableCell>${product.price}</TableCell>
+                      <TableCell>${Number(parseFloat(product.price).toPrecision(2)) + Number("15")}</TableCell>
+                      <TableCell>
+                        {" "}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline">Rate this meal !</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                We hope, we have served at your best
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+
+                                <Rating productId={product.id} />
+                                {/* Rating for item in purchases */}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
                       {/* <TableCell className="hidden md:table-cell">
                         {new Date(product.createdAt).toLocaleString()}
                       </TableCell> */}
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>
@@ -202,3 +243,4 @@ export default async function PurchasesPage() {
     </Shell>
   );
 }
+

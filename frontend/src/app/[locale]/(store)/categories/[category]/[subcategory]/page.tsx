@@ -1,10 +1,3 @@
-/**
- * Subcategory Page
- * ================
- *
- * @see https://github.com/gustavoguichard/string-ts#-api
- */
-
 import type { Metadata } from "next";
 import { unslugify } from "~/utils";
 import { getTranslations } from "next-intl/server";

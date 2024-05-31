@@ -37,6 +37,8 @@
       }
     ],
     "noEmit": true,
+    "noEmitOnError": false,
+
     "allowJs": true,
     "checkJs": true,
     "sourceMap": true,

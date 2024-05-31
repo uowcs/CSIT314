@@ -1,10 +1,4 @@
-/**
- * Layout file for internationalized-first rendering in the Next.js app.
- * This file serves as the primary entry point for handling UI rendering.
- *
- * Learn more about the Relivator Next.js starter:
- * @see https://github.com/blefnk/relivator#readme
- */
+
 
 import "~/styles/globals.css";
 
