@@ -14,16 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Sonarqube Scan
-      #   uses: sonarsource/sonarqube-scan-action@master
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Sonarqube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Use Node.js 16
         uses: actions/setup-node@v3
@@ -32,7 +32,6 @@ jobs:
           # cache: 'npm'
 
       - name: Setup and install dependencies
-        working-directory: ./frontend
         run: |
           npm install
           npm run lint
@@ -56,15 +55,12 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        working-directory: ./frontend
         run: npm install
 
       - name: Build
-        working-directory: ./frontend
         run: npm run build
 
       - name: Run Tests
-        working-directory: ./frontend
         run: npm test
 
   load-testing:
@@ -85,7 +81,7 @@ jobs:
 
       - name: Run Locust to test the application performance
         run: |
-          locust -f ./frontend/locustfile.py --host https://csit-314.vercel.app/ --headless -u 100 -r 10 --run-time 1m
+          locust -f ./locustfile.py --host https://csit-314.vercel.app/ --headless -u 100 -r 10 --run-time 1m
 
       
   deploy:
@@ -108,4 +104,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/your-image-name:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner }}/app:${{ github.sha }}

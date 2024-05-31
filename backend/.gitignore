@@ -1,9 +1,0 @@
-flagged/
-.env
-.venv/
-venv/
-__pycache__/
-*.log
-*.db
-.vscode
-app.env
